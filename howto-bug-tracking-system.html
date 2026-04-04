@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How-To: Sistema de Gestión de Desarrollo y Bugs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e2a;
+    --surface: #1e2330;
+    --border: #2a2f3f;
+    --accent: #5b7fff;
+    --accent2: #00e5c3;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e8eaf0;
+    --text2: #9da3b4;
+    --text3: #636878;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0d0f14 0%, #13161e 50%, #1a1e2a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(91,127,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 200px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,229,195,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .doc-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(91,127,255,0.12);
+    border: 1px solid rgba(91,127,255,0.3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .doc-tag::before { content: '//'; opacity: 0.6; }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  h1 span {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text2);
+    font-size: 16px;
+    font-weight: 300;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .badge.version { background: rgba(91,127,255,0.15); color: var(--accent); border: 1px solid rgba(91,127,255,0.3); }
+  .badge.date { background: rgba(0,229,195,0.1); color: var(--accent2); border: 1px solid rgba(0,229,195,0.25); }
+  .badge.status { background: rgba(34,197,94,0.12); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+
+  /* LAYOUT */
+  .container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 220px);
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 220px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .nav-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 0 24px 8px;
+    margin-top: 20px;
+  }
+
+  .nav-section-title:first-child { margin-top: 0; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .nav-item:hover, .nav-item.active {
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    border-left-color: var(--accent);
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 48px 60px;
+    max-width: 900px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 64px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(91,127,255,0.1);
+    border: 1px solid rgba(91,127,255,0.25);
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h3::before {
+    content: '';
+    width: 3px;
+    height: 18px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  p { color: var(--text2); margin-bottom: 14px; }
+
+  /* INFO BOXES */
+  .box {
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+  }
+
+  .box.info { background: rgba(59,130,246,0.08); border-color: var(--info); color: #93c5fd; }
+  .box.tip { background: rgba(0,229,195,0.07); border-color: var(--accent2); color: #6ee7db; }
+  .box.warning { background: rgba(245,158,11,0.08); border-color: var(--warning); color: #fcd34d; }
+  .box.danger { background: rgba(239,68,68,0.08); border-color: var(--danger); color: #fca5a5; }
+
+  .box strong { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(91,127,255,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .card p { font-size: 13px; color: var(--text2); margin: 0; }
+
+  /* ROLE TABLE */
+  .role-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  .role-table th {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .role-table td {
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    color: var(--text2);
+    vertical-align: top;
+  }
+
+  .role-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .role-table tr:hover td { background: rgba(91,127,255,0.05); }
+
+  /* STATUS PILLS */
+  .status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    min-width: 140px;
+  }
+
+  .status-desc { font-size: 13px; color: var(--text2); }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .flow-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--accent);
+    padding: 0 8px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* PRIORITY INDICATORS */
+  .priority-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .priority-card {
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid;
+  }
+
+  .priority-card .p-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .priority-card .p-desc { font-size: 12px; }
+
+  .p-critical { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+  .p-high { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.4); color: #fcd34d; }
+  .p-medium { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); color: #93c5fd; }
+  .p-low { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.4); color: #86efac; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #0a0c12;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #c9d1e0;
+    line-height: 1.8;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+
+  .code-block .kw { color: #5b7fff; }
+  .code-block .str { color: #00e5c3; }
+  .code-block .cmt { color: #4a5270; }
+  .code-block .num { color: #ffd166; }
+
+  /* STEP LIST */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .steps li .step-content h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .steps li .step-content p { font-size: 13px; color: var(--text2); margin: 0; }
+
+  /* NOTIFICATION TYPES */
+  .notif-list { margin: 16px 0; }
+
+  .notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .notif-item:last-child { border-bottom: none; }
+
+  .notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* DASHBOARD MOCKUP */
+  .dashboard-mock {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+
+  .dash-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text3);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .kpi .kpi-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .kpi .kpi-label { font-size: 11px; color: var(--text3); }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 80px;
+    margin-top: 12px;
+  }
+
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+  .bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+  }
+
+  .bar-lbl { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+  /* TECH STACK */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .tech-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tech-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .tech-info .tech-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .tech-info .tech-role { font-size: 11px; color: var(--text3); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 32px 24px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .priority-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="doc-tag">HOW-TO DOCUMENT</div>
+  <h1>Sistema de Gestión de<br><span>Desarrollo y Bugs</span></h1>
+  <p class="subtitle">Guía completa para diseñar, implementar y operar una plataforma de seguimiento de bugs, proyectos y equipos de desarrollo.</p>
+  <div class="meta-row">
+    <span class="badge version">v1.0.0</span>
+    <span class="badge date">2026</span>
+    <span class="badge status">✓ Borrador Completo</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section-title">Introducción</div>
+    <a class="nav-item active" href="#overview">📌 Visión General</a>
+    <a class="nav-item" href="#objetivos">🎯 Objetivos</a>
+
+    <div class="nav-section-title">Módulos del Sistema</div>
+    <a class="nav-item" href="#bugs">🐛 Reporte de Bugs</a>
+    <a class="nav-item" href="#seguimiento">🔍 Seguimiento</a>
+    <a class="nav-item" href="#resolucion">✅ Resolución</a>
+    <a class="nav-item" href="#proyectos">📁 Proyectos</a>
+    <a class="nav-item" href="#programadores">👥 Programadores</a>
+
+    <div class="nav-section-title">Gestión</div>
+    <a class="nav-item" href="#estados">🔄 Estados y Flujos</a>
+    <a class="nav-item" href="#usuarios">🔐 Niveles de Usuario</a>
+    <a class="nav-item" href="#dashboard">📊 Dashboards</a>
+    <a class="nav-item" href="#indicadores">📈 Indicadores (KPIs)</a>
+    <a class="nav-item" href="#notificaciones">🔔 Notificaciones</a>
+
+    <div class="nav-section-title">Implementación</div>
+    <a class="nav-item" href="#tecnologias">⚙️ Tecnologías</a>
+    <a class="nav-item" href="#modelo-datos">🗄️ Modelo de Datos</a>
+    <a class="nav-item" href="#implantacion">🚀 Plan de Implantación</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- 1. OVERVIEW -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Visión General del Sistema</h2>
+      </div>
+
+      <p>Este documento describe cómo diseñar e implementar un <strong style="color:var(--text)">Sistema de Gestión de Desarrollo (SGD)</strong> que centralice el control de bugs, tareas, proyectos y equipos de programación. El sistema permite trazabilidad completa desde el reporte de un error hasta su resolución documentada.</p>
+
+      <div class="box info">
+        <strong>Propósito</strong>
+        El SGD busca reducir el tiempo de resolución de bugs, mejorar la visibilidad del progreso de los proyectos y generar métricas objetivas del rendimiento de cada desarrollador y equipo.
+      </div>
+
+      <h3>Módulos Principales</h3>
+      <div class="cards-grid">
+        <div class="card">
+          <span class="card-icon">🐛</span>
+          <h4>Bug Tracker</h4>
+          <p>Registro, categorización y seguimiento de errores con historial completo de cambios.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">📁</span>
+          <h4>Gestión de Proyectos</h4>
+          <p>Control de múltiples proyectos simultáneos con sprints, hitos y entregables.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">👥</span>
+          <h4>Seguimiento de Equipo</h4>
+          <p>Carga de trabajo, rendimiento y asignaciones por programador.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">📊</span>
+          <h4>Dashboards</h4>
+          <p>Paneles en tiempo real con KPIs, gráficos y reportes ejecutivos.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔔</span>
+          <h4>Notificaciones</h4>
+          <p>Alertas automáticas por correo, sistema y escalamiento por prioridad.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔐</span>
+          <h4>Control de Acceso</h4>
+          <p>Roles y permisos granulares por módulo, proyecto y tipo de acción.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. OBJETIVOS -->
+    <section class="section" id="objetivos">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Objetivos del Sistema</h2>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <h4>Centralizar la gestión de errores</h4>
+            <p>Eliminar el reporte de bugs por correo o mensajería informal. Todo pasa por el sistema con número de ticket único.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Garantizar trazabilidad completa</h4>
+            <p>Cada bug debe tener documentado: quién lo reportó, quién lo asignó, quién lo resolvió, cómo se resolvió y cuánto tiempo tomó.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Visibilidad del equipo de desarrollo</h4>
+            <p>Permitir al jefe de sistemas ver en tiempo real la carga de trabajo y estado de cada programador.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Gestión multi-proyecto</h4>
+            <p>Soportar varios proyectos activos simultáneamente con contexto aislado pero vista consolidada.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Generar indicadores de calidad</h4>
+            <p>Producir métricas automáticas: tasa de resolución, tiempo promedio, recurrencia de errores, etc.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 3. REPORTE DE BUGS -->
+    <section class="section" id="bugs">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Módulo: Reporte de Bugs</h2>
+      </div>
+
+      <p>El reporte de bugs es el punto de entrada principal al sistema. Debe ser simple para quien reporta, pero capturar suficiente información para quien lo resuelve.</p>
+
+      <h3>Campos Obligatorios del Formulario</h3>
+      <div class="code-block">
+        <span class="cmt">// Estructura del Bug Report</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="kw">titulo</span>: <span class="str">"Descripción corta (max 120 chars)"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">proyecto</span>: <span class="str">"ID del proyecto relacionado"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">modulo</span>: <span class="str">"Módulo o componente afectado"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">prioridad</span>: <span class="str">"CRÍTICA | ALTA | MEDIA | BAJA"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">entorno</span>: <span class="str">"Producción | Staging | Desarrollo"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">descripcion</span>: <span class="str">"Descripción detallada del error"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">pasos_reproducir</span>: <span class="str">"Lista numerada de pasos"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">comportamiento_esperado</span>: <span class="str">"..."</span>,<br>
+        &nbsp;&nbsp;<span class="kw">comportamiento_actual</span>: <span class="str">"..."</span>,<br>
+        &nbsp;&nbsp;<span class="kw">evidencia</span>: <span class="str">"Screenshots, logs, videos"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">version_sistema</span>: <span class="str">"v2.3.1"</span><br>
+        }
+      </div>
+
+      <h3>Niveles de Prioridad</h3>
+      <div class="priority-grid">
+        <div class="priority-card p-critical">
+          <span class="p-label">🔴 Crítica</span>
+          <div class="p-desc">Sistema caído. Respuesta en &lt; 2 horas</div>
+        </div>
+        <div class="priority-card p-high">
+          <span class="p-label">🟡 Alta</span>
+          <div class="p-desc">Funcionalidad clave afectada. &lt; 8 horas</div>
+        </div>
+        <div class="priority-card p-medium">
+          <span class="p-label">🔵 Media</span>
+          <div class="p-desc">Funcionalidad secundaria. &lt; 48 horas</div>
+        </div>
+        <div class="priority-card p-low">
+          <span class="p-label">🟢 Baja</span>
+          <div class="p-desc">Mejoras o errores menores. Próximo sprint</div>
+        </div>
+      </div>
+
+      <div class="box tip">
+        <strong>Buena Práctica</strong>
+        El sistema debe generar automáticamente un número de ticket único (ej: BUG-2026-0142) y enviar confirmación al reportante con un enlace de seguimiento público.
+      </div>
+    </section>
+
+    <!-- 4. SEGUIMIENTO -->
+    <section class="section" id="seguimiento">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Módulo: Seguimiento</h2>
+      </div>
+
+      <p>El seguimiento es el corazón del sistema. Debe registrar <strong style="color:var(--text)">cada cambio de estado</strong>, comentario, asignación y acción tomada sobre un ticket, creando un historial inmutable.</p>
+
+      <h3>Historial de Actividad por Ticket</h3>
+      <div class="code-block">
+        <span class="cmt">// Cada entrada en el log del ticket</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="kw">timestamp</span>: <span class="str">"2026-04-03T14:23:00Z"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">usuario</span>: <span class="str">"jperez@empresa.com"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">accion</span>: <span class="str">"CAMBIO_ESTADO | COMENTARIO | ASIGNACION | ADJUNTO"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">valor_anterior</span>: <span class="str">"EN_REVISION"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">valor_nuevo</span>: <span class="str">"EN_DESARROLLO"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">comentario</span>: <span class="str">"Reproducido en v2.3.1. Causa: validación NULL"</span><br>
+        }
+      </div>
+
+      <h3>Vista de Seguimiento por Programador</h3>
+      <p>Cada programador ve su panel personal con:</p>
+      <ol class="steps">
+        <li><div class="step-content"><h4>Cola de trabajo personal</h4><p>Todos los tickets asignados, ordenados por prioridad y fecha límite.</p></div></li>
+        <li><div class="step-content"><h4>Tiempo activo por ticket</h4><p>Cronómetro integrado para registrar tiempo real invertido (opcional pero valioso para KPIs).</p></div></li>
+        <li><div class="step-content"><h4>Historial de resoluciones</h4><p>Todo lo que ha resuelto el programador, con su registro de cómo lo resolvió.</p></div></li>
+      </ol>
+
+      <h3>Seguimiento por Proyecto</h3>
+      <p>La vista de proyecto consolida todos sus bugs con filtros por: módulo, asignado, prioridad, estado y fecha. Incluye burndown chart del sprint activo.</p>
+    </section>
+
+    <!-- 5. RESOLUCIÓN -->
+    <section class="section" id="resolucion">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Módulo: Cómo se Resolvió</h2>
+      </div>
+
+      <p>La documentación de la resolución es el conocimiento institucional más valioso del sistema. Debe ser obligatoria al cerrar un ticket.</p>
+
+      <h3>Formulario de Cierre de Bug</h3>
+      <div class="code-block">
+        <span class="cmt">// Al pasar a estado RESUELTO</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="kw">tipo_resolucion</span>: <span class="str">"CORRECCIÓN | NO_REPRODUCIBLE | DUPLICADO | DISEÑO | RECHAZADO"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">causa_raiz</span>: <span class="str">"Descripción técnica de la causa"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">solucion_aplicada</span>: <span class="str">"Qué se hizo exactamente para resolver"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">archivos_modificados</span>: [<span class="str">"auth/login.js"</span>, <span class="str">"models/user.py"</span>],<br>
+        &nbsp;&nbsp;<span class="kw">commit_git</span>: <span class="str">"abc123def456"</span>, <span class="cmt">// Referencia al commit</span><br>
+        &nbsp;&nbsp;<span class="kw">requiere_deploy</span>: <span class="kw">true</span>,<br>
+        &nbsp;&nbsp;<span class="kw">notas_qa</span>: <span class="str">"Pasos para verificar la corrección"</span>,<br>
+        &nbsp;&nbsp;<span class="kw">prevencion_futura</span>: <span class="str">"Qué se puede hacer para evitar recurrencia"</span><br>
+        }
+      </div>
+
+      <div class="box warning">
+        <strong>Importante</strong>
+        El sistema debe enviar al reportante una notificación de resolución con el resumen de la solución. El ticket pasa a VERIFICADO solo después de que QA o el reportante confirmen la corrección.
+      </div>
+
+      <h3>Base de Conocimiento Automática</h3>
+      <p>Todas las resoluciones se indexan y son buscables, formando una base de conocimiento que permite a los programadores encontrar soluciones a errores similares anteriores antes de empezar a investigar.</p>
+    </section>
+
+    <!-- 6. PROYECTOS -->
+    <section class="section" id="proyectos">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Gestión Multi-Proyecto</h2>
+      </div>
+
+      <p>El sistema soporta múltiples proyectos de forma simultánea, cada uno con su propio equipo, configuración y flujo de trabajo.</p>
+
+      <h3>Estructura de un Proyecto</h3>
+      <div class="code-block">
+        Proyecto<br>
+        &nbsp;├── Nombre, descripción, fechas<br>
+        &nbsp;├── Equipo asignado (programadores con roles)<br>
+        &nbsp;├── Sprints / Iteraciones<br>
+        &nbsp;│&nbsp;&nbsp;&nbsp;├── Backlog de bugs y tareas<br>
+        &nbsp;│&nbsp;&nbsp;&nbsp;├── Sprint activo<br>
+        &nbsp;│&nbsp;&nbsp;&nbsp;└── Historial de sprints<br>
+        &nbsp;├── Módulos del sistema (componentes)<br>
+        &nbsp;├── Versiones (releases)<br>
+        &nbsp;└── Estadísticas del proyecto
+      </div>
+
+      <h3>Vista Consolidada Multi-Proyecto</h3>
+      <p>El jefe de sistemas y los administradores ven un dashboard que muestra todos los proyectos activos con sus métricas clave en una sola pantalla, permitiendo priorización y re-asignación de recursos entre proyectos.</p>
+
+      <div class="box info">
+        <strong>Funcionalidad Clave</strong>
+        Cada proyecto puede tener su propio flujo de estados, prioridades y plantillas de bugs customizadas. Sin embargo, todos comparten el mismo motor de KPIs y dashboard centralizado.
+      </div>
+    </section>
+
+    <!-- 7. PROGRAMADORES -->
+    <section class="section" id="programadores">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Seguimiento de Programadores</h2>
+      </div>
+
+      <p>El sistema genera una visión gerencial del desempeño del equipo basada en datos objetivos, no en percepción subjetiva.</p>
+
+      <h3>Métricas por Programador</h3>
+      <div class="cards-grid">
+        <div class="card">
+          <span class="card-icon">⏱️</span>
+          <h4>Tiempo de Resolución</h4>
+          <p>Promedio de tiempo desde asignación hasta cierre de ticket.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">✅</span>
+          <h4>Tasa de Resolución</h4>
+          <p>% de tickets resueltos vs asignados en el período.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔁</span>
+          <h4>Recurrencia</h4>
+          <p>Bugs reabiertos por solución incompleta o incorrecta.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">📦</span>
+          <h4>Carga Actual</h4>
+          <p>Tickets activos asignados en este momento.</p>
+        </div>
+      </div>
+
+      <div class="box tip">
+        <strong>Nota Ética</strong>
+        Estas métricas deben usarse para detectar cuellos de botella y apoyar al equipo, no como herramienta punitiva. Un programador con muchos tickets críticos puede estar cubriendo más superficie de riesgo.
+      </div>
+    </section>
+
+    <!-- 8. ESTADOS -->
+    <section class="section" id="estados">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Estados y Flujo de Trabajo</h2>
+      </div>
+
+      <h3>Flujo Principal de un Bug</h3>
+      <div class="flow">
+        <div class="flow-step">NUEVO</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">EN REVISIÓN</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">EN DESARROLLO</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">EN QA</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">RESUELTO</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">CERRADO</div>
+      </div>
+
+      <h3>Catálogo de Estados</h3>
+      <div class="status-list">
+        <div class="status-item">
+          <div class="status-dot" style="background:#6b7280"></div>
+          <div class="status-label" style="color:#9ca3af">NUEVO</div>
+          <div class="status-desc">Bug recién reportado, pendiente de revisión inicial.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#3b82f6"></div>
+          <div class="status-label" style="color:#93c5fd">EN REVISIÓN</div>
+          <div class="status-desc">El encargado está analizando y verificando si es reproducible.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#f59e0b"></div>
+          <div class="status-label" style="color:#fcd34d">ASIGNADO</div>
+          <div class="status-desc">Se asignó a un programador específico. Pendiente de inicio.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#8b5cf6"></div>
+          <div class="status-label" style="color:#c4b5fd">EN DESARROLLO</div>
+          <div class="status-desc">El programador está trabajando activamente en la solución.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#06b6d4"></div>
+          <div class="status-label" style="color:#67e8f9">EN QA</div>
+          <div class="status-desc">Solución implementada, esperando verificación de calidad.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#22c55e"></div>
+          <div class="status-label" style="color:#86efac">RESUELTO</div>
+          <div class="status-desc">QA verificó la corrección. Pendiente de confirmación del reportante.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#15803d"></div>
+          <div class="status-label" style="color:#4ade80">CERRADO</div>
+          <div class="status-desc">Reportante confirmó. Ticket archivado en base de conocimiento.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#ef4444"></div>
+          <div class="status-label" style="color:#fca5a5">RECHAZADO</div>
+          <div class="status-desc">No es un bug, es comportamiento esperado o no reproducible.</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#ea580c"></div>
+          <div class="status-label" style="color:#fdba74">REABIERTO</div>
+          <div class="status-desc">La solución no funcionó. Vuelve al flujo de desarrollo.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. USUARIOS -->
+    <section class="section" id="usuarios">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Niveles de Usuario y Permisos</h2>
+      </div>
+
+      <table class="role-table">
+        <thead>
+          <tr>
+            <th>Rol</th>
+            <th>Descripción</th>
+            <th>Permisos Principales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#ffd166">👑 Administrador</strong></td>
+            <td>Jefe de sistemas / TI</td>
+            <td>Todo el sistema: usuarios, proyectos, configs globales, reportes ejecutivos.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#5b7fff">🔧 Líder de Proyecto</strong></td>
+            <td>Responsable de un proyecto</td>
+            <td>Gestionar su proyecto, asignar bugs, ver KPIs del equipo, crear sprints.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#00e5c3">💻 Desarrollador</strong></td>
+            <td>Programador del equipo</td>
+            <td>Ver y actualizar tickets asignados, documentar resoluciones, comentar.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#c084fc">🔍 QA / Tester</strong></td>
+            <td>Control de calidad</td>
+            <td>Crear bugs, verificar resoluciones, cambiar estado a EN QA o REABIERTO.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#9ca3af">👁️ Reportante</strong></td>
+            <td>Usuario que reporta errores</td>
+            <td>Crear bugs, ver estado de sus propios tickets, confirmar resolución.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#64748b">📖 Solo Lectura</strong></td>
+            <td>Directivos, auditores</td>
+            <td>Ver dashboards y reportes. Sin modificar datos.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box warning">
+        <strong>Permisos por Proyecto</strong>
+        Un desarrollador puede ser Líder en el Proyecto A y solo Desarrollador en el Proyecto B. Los roles son asignados por proyecto, no globalmente (excepto Administrador).
+      </div>
+    </section>
+
+    <!-- 10. DASHBOARD -->
+    <section class="section" id="dashboard">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Dashboards</h2>
+      </div>
+
+      <p>El sistema tendrá al menos tres dashboards diferenciados según el rol del usuario.</p>
+
+      <h3>Dashboard Ejecutivo (Admin)</h3>
+      <div class="dashboard-mock">
+        <div class="dash-title">📊 Vista General del Sistema · Todos los Proyectos</div>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-val" style="color:#ef4444">12</div>
+            <div class="kpi-label">Bugs Críticos Abiertos</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:#f59e0b">47</div>
+            <div class="kpi-label">Total Bugs Activos</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:#22c55e">89%</div>
+            <div class="kpi-label">Tasa Resolución Mes</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:#5b7fff">6.2h</div>
+            <div class="kpi-label">Tiempo Prom. Resolución</div>
+          </div>
+        </div>
+        <div class="dash-title" style="font-size:11px;margin-bottom:8px;">Bugs resueltos por semana</div>
+        <div class="bar-chart">
+          <div class="bar-col"><div class="bar" style="height:40%;background:rgba(91,127,255,0.5)"></div><div class="bar-lbl">S1</div></div>
+          <div class="bar-col"><div class="bar" style="height:65%;background:rgba(91,127,255,0.5)"></div><div class="bar-lbl">S2</div></div>
+          <div class="bar-col"><div class="bar" style="height:55%;background:rgba(91,127,255,0.5)"></div><div class="bar-lbl">S3</div></div>
+          <div class="bar-col"><div class="bar" style="height:80%;background:rgba(0,229,195,0.6)"></div><div class="bar-lbl">S4</div></div>
+          <div class="bar-col"><div class="bar" style="height:70%;background:rgba(91,127,255,0.5)"></div><div class="bar-lbl">S5</div></div>
+          <div class="bar-col"><div class="bar" style="height:90%;background:rgba(0,229,195,0.6)"></div><div class="bar-lbl">S6</div></div>
+        </div>
+      </div>
+
+      <h3>Dashboard del Desarrollador</h3>
+      <p>Vista personal que muestra: cola de trabajo priorizada, tiempo activo, bugs asignados hoy, y su historial de la semana. Diseñada para que el programador empiece el día sabiendo exactamente qué hacer.</p>
+
+      <h3>Dashboard de Proyecto</h3>
+      <p>Vista de burndown del sprint, distribución de bugs por módulo, equipo activo, y progreso hacia el release. Útil para el standup diario del equipo.</p>
+    </section>
+
+    <!-- 11. KPIs -->
+    <section class="section" id="indicadores">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <h2>Indicadores (KPIs)</h2>
+      </div>
+
+      <h3>KPIs del Sistema</h3>
+      <table class="role-table">
+        <thead>
+          <tr><th>Indicador</th><th>Descripción</th><th>Meta Referencial</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--accent)">Tiempo Medio de Resolución</strong></td>
+            <td>Promedio de horas desde creación hasta cierre</td>
+            <td>&lt; 24h para ALTA, &lt; 4h para CRÍTICA</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent)">Tasa de Reapertura</strong></td>
+            <td>% de bugs que vuelven a REABIERTO tras resolución</td>
+            <td>&lt; 5%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent)">Backlog Growth</strong></td>
+            <td>Nuevos bugs vs resueltos en el período</td>
+            <td>Ratio &lt; 1 (se resuelve más de lo que entra)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent)">Bug Density</strong></td>
+            <td>Bugs por módulo / componente</td>
+            <td>Identifica zonas de código problemático</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent)">SLA Compliance</strong></td>
+            <td>% de bugs atendidos dentro del tiempo por prioridad</td>
+            <td>&gt; 95%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent)">Throughput del Equipo</strong></td>
+            <td>Bugs resueltos por programador por semana</td>
+            <td>Base para planificación de capacidad</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 12. NOTIFICACIONES -->
+    <section class="section" id="notificaciones">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <h2>Notificaciones y Alertas</h2>
+      </div>
+
+      <h3>Tipos de Notificación</h3>
+      <div class="notif-list">
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(239,68,68,0.15)">🚨</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Alerta Crítica</strong>
+            <p style="margin:0;font-size:13px">Bug CRÍTICO creado → Notifica inmediatamente al Admin y Líder del proyecto por sistema y correo.</p>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(91,127,255,0.15)">📌</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Asignación</strong>
+            <p style="margin:0;font-size:13px">Bug asignado → Notifica al programador asignado con detalles y fecha límite.</p>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(245,158,11,0.15)">⏰</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">SLA por Vencer</strong>
+            <p style="margin:0;font-size:13px">Bug próximo a vencer su SLA → Alerta al desarrollador (1h antes) y al líder (30 min antes).</p>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(239,68,68,0.15)">🔺</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Escalamiento</strong>
+            <p style="margin:0;font-size:13px">SLA vencido sin atención → Escala automáticamente al nivel superior con notificación urgente.</p>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Resolución</strong>
+            <p style="margin:0;font-size:13px">Bug resuelto → Notifica al reportante con resumen de solución y solicita confirmación.</p>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon" style="background:rgba(139,92,246,0.15)">💬</div>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Nuevo Comentario</strong>
+            <p style="margin:0;font-size:13px">Comentario en ticket → Notifica a todos los participantes del ticket (mencionados o asignados).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="box tip">
+        <strong>Configuración</strong>
+        Cada usuario puede configurar qué notificaciones recibe y por qué canal: sistema (in-app), correo electrónico, o ambos. Los Administradores reciben siempre las alertas críticas sin posibilidad de desactivarlas.
+      </div>
+    </section>
+
+    <!-- 13. TECNOLOGÍAS -->
+    <section class="section" id="tecnologias">
+      <div class="section-header">
+        <span class="section-num">13</span>
+        <h2>Stack Tecnológico Recomendado</h2>
+      </div>
+
+      <h3>Opción A — Desarrollo Propio</h3>
+      <div class="tech-grid">
+        <div class="tech-item"><div class="tech-icon">⚡</div><div class="tech-info"><div class="tech-name">Next.js / React</div><div class="tech-role">Frontend + SSR</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🐍</div><div class="tech-info"><div class="tech-name">FastAPI / Django</div><div class="tech-role">API Backend</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🐘</div><div class="tech-info"><div class="tech-name">PostgreSQL</div><div class="tech-role">Base de datos</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🔴</div><div class="tech-info"><div class="tech-name">Redis</div><div class="tech-role">Cache + notifs</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🐳</div><div class="tech-info"><div class="tech-name">Docker</div><div class="tech-role">Contenedores</div></div></div>
+        <div class="tech-item"><div class="tech-icon">📧</div><div class="tech-info"><div class="tech-name">SMTP / SendGrid</div><div class="tech-role">Notificaciones email</div></div></div>
+      </div>
+
+      <h3>Opción B — Plataformas Open Source Existentes</h3>
+      <div class="tech-grid">
+        <div class="tech-item"><div class="tech-icon">🦊</div><div class="tech-info"><div class="tech-name">GitLab</div><div class="tech-role">Issues + CI/CD</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🔥</div><div class="tech-info"><div class="tech-name">Plane.so</div><div class="tech-role">Gestión proyectos</div></div></div>
+        <div class="tech-item"><div class="tech-icon">🐞</div><div class="tech-info"><div class="tech-name">Mantis BT</div><div class="tech-role">Bug tracking puro</div></div></div>
+        <div class="tech-item"><div class="tech-icon">📋</div><div class="tech-info"><div class="tech-name">Taiga.io</div><div class="tech-role">Scrum + bugs</div></div></div>
+      </div>
+
+      <div class="box info">
+        <strong>Recomendación</strong>
+        Para una institución pública como la AGBC, se recomienda evaluar primero soluciones open source auto-hospedadas (Plane, GitLab CE) para evitar dependencia de proveedores externos y reducir costos. El desarrollo propio se justifica solo si se requiere integración con sistemas internos específicos (SIOP, TrackingBO).
+      </div>
+    </section>
+
+    <!-- 14. MODELO DE DATOS -->
+    <section class="section" id="modelo-datos">
+      <div class="section-header">
+        <span class="section-num">14</span>
+        <h2>Modelo de Datos Simplificado</h2>
+      </div>
+
+      <div class="code-block">
+        <span class="cmt">-- Tablas principales del sistema</span><br><br>
+        <span class="kw">Proyectos</span>: id, nombre, descripcion, estado, fecha_inicio, fecha_fin, lider_id<br>
+        <span class="kw">Usuarios</span>: id, nombre, email, rol_global, activo, creado_en<br>
+        <span class="kw">ProyectoUsuario</span>: proyecto_id, usuario_id, rol_proyecto<br>
+        <span class="kw">Bugs</span>: id, ticket_num, titulo, descripcion, prioridad, estado,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proyecto_id, modulo, entorno, reportado_por,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asignado_a, creado_en, actualizado_en, cerrado_en<br>
+        <span class="kw">BugHistorial</span>: id, bug_id, usuario_id, accion, valor_ant, valor_nuevo,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comentario, timestamp<br>
+        <span class="kw">Resoluciones</span>: id, bug_id, tipo, causa_raiz, solucion, commit_ref,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;archivos_modificados, resuelto_por, resuelto_en<br>
+        <span class="kw">Notificaciones</span>: id, usuario_id, tipo, mensaje, leido, canal, creado_en<br>
+        <span class="kw">Sprints</span>: id, proyecto_id, nombre, inicio, fin, estado
+      </div>
+    </section>
+
+    <!-- 15. IMPLANTACIÓN -->
+    <section class="section" id="implantacion">
+      <div class="section-header">
+        <span class="section-num">15</span>
+        <h2>Plan de Implantación por Fases</h2>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <h4>Fase 1 — Fundación (Semanas 1–4)</h4>
+            <p>Instalación del entorno, configuración de base de datos, módulo de usuarios y roles, autenticación, y formulario básico de reporte de bugs.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Fase 2 — Core del Sistema (Semanas 5–10)</h4>
+            <p>Flujo completo de estados, historial de actividad, módulo de proyectos, asignación de programadores, notificaciones por correo.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Fase 3 — Dashboards y KPIs (Semanas 11–16)</h4>
+            <p>Dashboard ejecutivo, dashboard del desarrollador, cálculo de KPIs automáticos, reportes exportables (PDF/Excel).</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Fase 4 — Integración y Optimización (Semanas 17–20)</h4>
+            <p>Integración con sistemas existentes (Git, correo institucional), escalamiento automático de SLAs, base de conocimiento de resoluciones.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h4>Fase 5 — Piloto y Capacitación (Semanas 21–24)</h4>
+            <p>Piloto con un proyecto real, capacitación del equipo por roles, ajustes basados en retroalimentación, go-live oficial.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="box danger">
+        <strong>Consideración Final</strong>
+        El éxito del sistema depende del <em>cambio cultural</em>, no solo de la tecnología. El equipo debe adoptar el hábito de documentar todo en el sistema. La jefatura de TI debe predicar con el ejemplo siendo los primeros en usarlo correctamente.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>HOW-TO // SISTEMA DE GESTIÓN DE DESARROLLO Y BUGS</span>
+  <span>v1.0 · Área de Sistemas · UTI · AGBC</span>
+</div>
+
+<script>
+  // Smooth scroll & active nav
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      }
+    });
+  });
+
+  // Auto-highlight nav on scroll
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.getAttribute('href') === '#' + id) {
+            item.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
