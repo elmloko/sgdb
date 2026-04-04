@@ -30,8 +30,13 @@ class BugController extends Controller
         // Visibilidad según rol
         if ($user->rol_global === 'reportante') {
             $query->where('reportado_por', $user->id);
+        } elseif ($user->rol_global === 'qa') {
+            // QA solo ve bugs en estados de su competencia dentro de sus proyectos
+            $proyectosIds = $user->proyectos()->pluck('proyectos.id');
+            $query->whereIn('proyecto_id', $proyectosIds)
+                  ->whereIn('estado', ['en_qa', 'resuelto', 'reabierto']);
         } elseif ($user->rol_global !== 'admin') {
-            // Desarrollador y QA solo ven bugs de sus proyectos
+            // Desarrollador solo ve bugs de sus proyectos
             $proyectosIds = $user->proyectos()->pluck('proyectos.id');
             $query->whereIn('proyecto_id', $proyectosIds);
         }
