@@ -33,6 +33,31 @@ const bugsFiltrados = computed(() =>
         : props.bugs
 )
 
+// ── Cambiar estado del proyecto ───────────────────────────────────────────
+const menuEstadoAbierto = ref(false)
+const formEstado = useForm({ estado: '' })
+const estadosDisponibles = computed(() => {
+    const todos = [
+        { value: 'activo',     label: 'Activar' },
+        { value: 'pausado',    label: 'Pausar' },
+        { value: 'completado', label: 'Marcar como completado' },
+        { value: 'archivado',  label: 'Archivar (dar de baja)' },
+    ]
+    return todos.filter(e => e.value !== props.proyecto.estado)
+})
+const cambiarEstado = (nuevoEstado) => {
+    menuEstadoAbierto.value = false
+    const confirmar = {
+        archivado:  `¿Archivar el proyecto "${props.proyecto.nombre}"? Ya no aparecerá como activo.`,
+        pausado:    `¿Pausar el proyecto "${props.proyecto.nombre}"?`,
+        completado: `¿Marcar "${props.proyecto.nombre}" como completado?`,
+        activo:     `¿Reactivar el proyecto "${props.proyecto.nombre}"?`,
+    }
+    if (!confirm(confirmar[nuevoEstado])) return
+    formEstado.estado = nuevoEstado
+    formEstado.patch(route('proyectos.cambiarEstado', props.proyecto.id))
+}
+
 // ── Equipo ────────────────────────────────────────────────────────────────
 const idsEnProyecto = computed(() => props.proyecto.usuarios.map(u => u.id))
 const usuariosParaAsignar = computed(() =>
@@ -106,13 +131,47 @@ function slaClass(iso) {
                         {{ estadoConfig[proyecto.estado]?.label }}
                     </span>
                 </div>
-                <Link
-                    v-if="esAdmin"
-                    :href="route('proyectos.edit', proyecto.id)"
-                    class="rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-200"
-                >
-                    Editar
-                </Link>
+                <div v-if="esAdmin" class="flex items-center gap-2">
+                    <Link
+                        :href="route('proyectos.edit', proyecto.id)"
+                        class="rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-200"
+                    >
+                        Editar
+                    </Link>
+
+                    <!-- Menú de cambio de estado -->
+                    <div class="relative">
+                        <button
+                            @click="menuEstadoAbierto = !menuEstadoAbierto"
+                            class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+                        >
+                            Cambiar estado
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div
+                            v-if="menuEstadoAbierto"
+                            class="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg z-10"
+                        >
+                            <button
+                                v-for="opcion in estadosDisponibles"
+                                :key="opcion.value"
+                                @click="cambiarEstado(opcion.value)"
+                                class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
+                                :class="opcion.value === 'archivado' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'"
+                            >
+                                {{ opcion.label }}
+                            </button>
+                        </div>
+                        <!-- Cerrar al hacer clic fuera -->
+                        <div
+                            v-if="menuEstadoAbierto"
+                            class="fixed inset-0 z-0"
+                            @click="menuEstadoAbierto = false"
+                        />
+                    </div>
+                </div>
             </div>
         </template>
 

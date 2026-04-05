@@ -66,7 +66,8 @@ Route::middleware('auth')->group(function () {
 
     // Otras rutas de proyecto solo admin
     Route::middleware('check.rol:admin')->group(function () {
-
+        Route::patch('/proyectos/{proyecto}/estado', [ProyectoController::class, 'cambiarEstado'])
+            ->name('proyectos.cambiarEstado');
         Route::post('/proyectos/{proyecto}/usuarios', [ProyectoController::class, 'asignarUsuario'])
             ->name('proyectos.asignarUsuario');
         Route::delete('/proyectos/{proyecto}/usuarios/{usuario}', [ProyectoController::class, 'quitarUsuario'])

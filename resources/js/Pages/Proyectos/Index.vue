@@ -1,5 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import { Link, useForm } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
@@ -18,6 +19,30 @@ const estadoConfig = {
 function formatFecha(fecha) {
     if (!fecha) return '—'
     return new Date(fecha).toLocaleDateString('es-BO', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
+// ── Cambiar estado rápido ─────────────────────────────────────────────────
+const menuAbierto = ref(null) // id del proyecto con menú abierto
+const formEstado  = useForm({ estado: '' })
+
+const estadosSiguientes = {
+    activo:     [{ value: 'pausado', label: 'Pausar' }, { value: 'archivado', label: 'Archivar' }],
+    pausado:    [{ value: 'activo', label: 'Reactivar' }, { value: 'archivado', label: 'Archivar' }],
+    completado: [{ value: 'archivado', label: 'Archivar' }],
+    archivado:  [{ value: 'activo', label: 'Reactivar' }],
+}
+
+function cambiarEstado(proyecto, nuevoEstado) {
+    menuAbierto.value = null
+    const confirmar = {
+        archivado:  `¿Archivar "${proyecto.nombre}"?`,
+        pausado:    `¿Pausar "${proyecto.nombre}"?`,
+        completado: `¿Marcar "${proyecto.nombre}" como completado?`,
+        activo:     `¿Reactivar "${proyecto.nombre}"?`,
+    }
+    if (!confirm(confirmar[nuevoEstado])) return
+    formEstado.estado = nuevoEstado
+    formEstado.patch(route('proyectos.cambiarEstado', proyecto.id))
 }
 </script>
 
@@ -50,6 +75,7 @@ function formatFecha(fecha) {
                         v-for="p in proyectos"
                         :key="p.id"
                         class="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                        :class="{ 'opacity-60': p.estado === 'archivado' }"
                     >
                         <div class="flex items-start justify-between gap-2">
                             <h3 class="font-semibold text-gray-800 leading-snug">{{ p.nombre }}</h3>
@@ -88,6 +114,43 @@ function formatFecha(fecha) {
                             >
                                 Editar
                             </Link>
+
+                            <!-- Menú de estado rápido (solo admin) -->
+                            <div v-if="esAdmin" class="relative">
+                                <button
+                                    @click.stop="menuAbierto = menuAbierto === p.id ? null : p.id"
+                                    class="rounded-md border border-gray-200 px-2 py-1.5 text-gray-500 hover:bg-gray-100"
+                                    title="Cambiar estado"
+                                >
+                                    <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <circle cx="10" cy="4"  r="1.5"/>
+                                        <circle cx="10" cy="10" r="1.5"/>
+                                        <circle cx="10" cy="16" r="1.5"/>
+                                    </svg>
+                                </button>
+
+                                <div
+                                    v-if="menuAbierto === p.id"
+                                    class="absolute right-0 bottom-full mb-1 w-44 rounded-md border border-gray-200 bg-white shadow-lg z-10"
+                                >
+                                    <button
+                                        v-for="opcion in estadosSiguientes[p.estado]"
+                                        :key="opcion.value"
+                                        @click="cambiarEstado(p, opcion.value)"
+                                        class="block w-full px-4 py-2 text-left text-xs hover:bg-gray-50"
+                                        :class="opcion.value === 'archivado' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'"
+                                    >
+                                        {{ opcion.label }}
+                                    </button>
+                                </div>
+
+                                <!-- Cerrar al hacer clic fuera -->
+                                <div
+                                    v-if="menuAbierto === p.id"
+                                    class="fixed inset-0 z-0"
+                                    @click="menuAbierto = null"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

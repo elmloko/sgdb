@@ -116,6 +116,30 @@ class ProyectoController extends Controller
     }
 
     /**
+     * Cambia el estado del proyecto (archivar, pausar, activar, etc.).
+     */
+    public function cambiarEstado(Proyecto $proyecto)
+    {
+        $this->authorize('update', $proyecto);
+
+        $nuevoEstado = request()->validate([
+            'estado' => ['required', 'in:activo,pausado,completado,archivado'],
+        ])['estado'];
+
+        $proyecto->update(['estado' => $nuevoEstado]);
+
+        $etiquetas = [
+            'activo'     => 'activado',
+            'pausado'    => 'pausado',
+            'completado' => 'marcado como completado',
+            'archivado'  => 'archivado',
+        ];
+
+        return redirect()->route('proyectos.show', $proyecto)
+            ->with('success', "Proyecto \"{$proyecto->nombre}\" {$etiquetas[$nuevoEstado]} correctamente.");
+    }
+
+    /**
      * Asigna un usuario al proyecto con un rol específico.
      * Si ya existe, actualiza su rol.
      */

@@ -18,7 +18,7 @@ class StoreBugRequest extends FormRequest
             'titulo'                  => ['required', 'string', 'max:255'],
             'descripcion'             => ['required', 'string'],
             'prioridad'               => ['required', 'in:critica,alta,media,baja'],
-            'proyecto_id'             => ['required', 'integer', 'exists:proyectos,id'],
+            'proyecto_id'             => ['required', 'integer', 'exists:proyectos,id,estado,activo'],
             'modulo'                  => ['nullable', 'string', 'max:100'],
             'entorno'                 => ['required', 'in:produccion,staging,desarrollo'],
             'pasos_reproducir'        => ['nullable', 'string'],
