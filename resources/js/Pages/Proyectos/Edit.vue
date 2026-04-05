@@ -27,14 +27,14 @@ const submit = () => form.put(route('proyectos.update', props.proyecto.id))
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="text-xl font-semibold leading-tight text-slate-100">
                 Editar proyecto — {{ proyecto.nombre }}
             </h2>
         </template>
 
         <div class="py-8">
             <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-sm">
                     <form @submit.prevent="submit" class="space-y-5">
 
                         <div>
@@ -49,7 +49,7 @@ const submit = () => form.put(route('proyectos.update', props.proyecto.id))
                                 id="descripcion"
                                 v-model="form.descripcion"
                                 rows="3"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                                class="mt-1 block w-full rounded-md border-slate-700 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-sm"
                             />
                             <InputError :message="form.errors.descripcion" class="mt-1" />
                         </div>
@@ -59,7 +59,7 @@ const submit = () => form.put(route('proyectos.update', props.proyecto.id))
                             <select
                                 id="estado"
                                 v-model="form.estado"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                                class="mt-1 block w-full rounded-md border-slate-700 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 text-sm"
                             >
                                 <option value="activo">Activo</option>
                                 <option value="pausado">Pausado</option>
@@ -83,7 +83,7 @@ const submit = () => form.put(route('proyectos.update', props.proyecto.id))
                         </div>
 
                         <div class="flex items-center justify-end gap-3 pt-2">
-                            <Link :href="route('proyectos.show', proyecto.id)" class="text-sm text-gray-500 hover:text-gray-700">
+                            <Link :href="route('proyectos.show', proyecto.id)" class="text-sm text-slate-500 hover:text-slate-300">
                                 Cancelar
                             </Link>
                             <PrimaryButton :disabled="form.processing">

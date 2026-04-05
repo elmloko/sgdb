@@ -31,7 +31,7 @@ const claseRol = {
     admin: 'bg-purple-100 text-purple-800',
     desarrollador: 'bg-blue-100 text-blue-800',
     qa: 'bg-yellow-100 text-yellow-800',
-    reportante: 'bg-gray-100 text-gray-800',
+    reportante: 'bg-slate-800 text-slate-100',
 };
 </script>
 
@@ -41,12 +41,12 @@ const claseRol = {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                <h2 class="text-xl font-semibold leading-tight text-slate-100">
                     Gestión de Usuarios
                 </h2>
                 <Link
                     :href="route('usuarios.create')"
-                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                    class="rounded-md bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400"
                 >
                     + Nuevo Usuario
                 </Link>
@@ -61,50 +61,50 @@ const claseRol = {
                         v-model="busqueda"
                         type="text"
                         placeholder="Buscar por nombre, correo o rol..."
-                        class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:w-80"
+                        class="w-full rounded-md border border-slate-700 px-4 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 sm:w-80"
                     />
                 </div>
 
                 <!-- Tabla -->
-                <div class="overflow-hidden rounded-lg bg-white shadow">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <div class="overflow-hidden rounded-lg bg-slate-900 shadow">
+                    <table class="min-w-full divide-y divide-slate-800">
+                        <thead class="bg-slate-800/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                                     Nombre
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                                     Correo
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                                     Rol Global
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                                     Estado
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                                     Miembro desde
                                 </th>
                                 <th class="px-6 py-3"></th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 bg-white">
+                        <tbody class="divide-y divide-slate-800 bg-slate-900">
                             <tr v-if="usuariosFiltrados.length === 0">
-                                <td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">
+                                <td colspan="6" class="px-6 py-8 text-center text-sm text-slate-500">
                                     No se encontraron usuarios.
                                 </td>
                             </tr>
                             <tr
                                 v-for="usuario in usuariosFiltrados"
                                 :key="usuario.id"
-                                class="hover:bg-gray-50"
+                                class="hover:bg-slate-800/50"
                             >
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-slate-100">
                                         {{ usuario.name }}
                                     </div>
                                 </td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     {{ usuario.email }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
@@ -125,13 +125,13 @@ const claseRol = {
                                         {{ usuario.activo ? 'Activo' : 'Inactivo' }}
                                     </span>
                                 </td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     {{ new Date(usuario.created_at).toLocaleDateString('es-BO') }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                     <Link
                                         :href="route('usuarios.edit', usuario.id)"
-                                        class="font-medium text-indigo-600 hover:text-indigo-900"
+                                        class="font-medium text-cyan-400 hover:text-indigo-900"
                                     >
                                         Editar
                                     </Link>
@@ -141,7 +141,7 @@ const claseRol = {
                     </table>
                 </div>
 
-                <p class="mt-2 text-xs text-gray-400">
+                <p class="mt-2 text-xs text-slate-500">
                     {{ usuariosFiltrados.length }} usuario(s) encontrado(s)
                 </p>
             </div>

@@ -60,7 +60,7 @@ const badgeSlaClass = (bug) => {
         case 'vencido': return 'bg-red-100 text-red-800 font-semibold'
         case 'critico': return 'bg-orange-100 text-orange-800 font-semibold'
         case 'proximo': return 'bg-yellow-100 text-yellow-800'
-        default:        return 'bg-gray-100 text-gray-600'
+        default:        return 'bg-slate-800 text-slate-400'
     }
 }
 
@@ -77,7 +77,7 @@ const colorTasa = computed(() => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="text-xl font-semibold leading-tight text-slate-100">
                 Mi Panel
             </h2>
         </template>
@@ -88,56 +88,56 @@ const colorTasa = computed(() => {
                 <!-- ── KPIs personales ──────────────────────────────────── -->
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <!-- Bugs en cola -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                        <p class="text-sm font-medium text-gray-500">Bugs asignados activos</p>
-                        <p class="mt-1 text-3xl font-bold text-gray-900">{{ bugsAsignados.length }}</p>
-                        <p class="mt-1 text-xs text-gray-400">no cerrados ni rechazados</p>
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500">Bugs asignados activos</p>
+                        <p class="mt-1 text-3xl font-bold text-slate-100">{{ bugsAsignados.length }}</p>
+                        <p class="mt-1 text-xs text-slate-500">no cerrados ni rechazados</p>
                     </div>
 
                     <!-- Resueltos este mes -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                        <p class="text-sm font-medium text-gray-500">Resueltos este mes</p>
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500">Resueltos este mes</p>
                         <p class="mt-1 text-3xl font-bold text-green-600">{{ resueltosMes }}</p>
-                        <p class="mt-1 text-xs text-gray-400">de {{ totalResueltos }} en total</p>
+                        <p class="mt-1 text-xs text-slate-500">de {{ totalResueltos }} en total</p>
                     </div>
 
                     <!-- Tasa de reapertura -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                        <p class="text-sm font-medium text-gray-500">Tasa de reapertura</p>
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-sm">
+                        <p class="text-sm font-medium text-slate-500">Tasa de reapertura</p>
                         <p class="mt-1 text-3xl font-bold" :class="colorTasa">{{ tasaReapertura }}%</p>
-                        <p class="mt-1 text-xs text-gray-400">sobre {{ totalResueltos }} resoluciones</p>
+                        <p class="mt-1 text-xs text-slate-500">sobre {{ totalResueltos }} resoluciones</p>
                     </div>
                 </div>
 
                 <!-- ── Cola de trabajo ──────────────────────────────────── -->
                 <section>
-                    <h3 class="mb-3 text-base font-semibold text-gray-700">
+                    <h3 class="mb-3 text-base font-semibold text-slate-300">
                         Cola de trabajo
                         <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
                             {{ bugsAsignados.length }}
                         </span>
                     </h3>
 
-                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                        <table v-if="bugsAsignados.length > 0" class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                    <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-sm">
+                        <table v-if="bugsAsignados.length > 0" class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Ticket</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Título</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Prioridad</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Estado</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Proyecto</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">SLA vence</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Restante</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Ticket</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Título</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Prioridad</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Estado</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Proyecto</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">SLA vence</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Restante</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-slate-800/60">
                                 <tr
                                     v-for="bug in bugsAsignados"
                                     :key="bug.id"
                                     :class="filaSlaClass(bug)"
                                 >
-                                    <td class="px-4 py-3 font-mono text-xs text-gray-700">
+                                    <td class="px-4 py-3 font-mono text-xs text-slate-300">
                                         <Link
                                             :href="route('bugs.show', bug.id)"
                                             class="text-blue-600 hover:underline"
@@ -145,7 +145,7 @@ const colorTasa = computed(() => {
                                             {{ bug.ticket_num }}
                                         </Link>
                                     </td>
-                                    <td class="max-w-xs px-4 py-3 text-gray-900">
+                                    <td class="max-w-xs px-4 py-3 text-slate-100">
                                         <Link
                                             :href="route('bugs.show', bug.id)"
                                             class="hover:underline line-clamp-1"
@@ -159,10 +159,10 @@ const colorTasa = computed(() => {
                                     <td class="px-4 py-3">
                                         <StatusBadge :estado="bug.estado" />
                                     </td>
-                                    <td class="px-4 py-3 text-gray-600 text-xs">
+                                    <td class="px-4 py-3 text-slate-400 text-xs">
                                         {{ bug.proyecto?.nombre ?? '—' }}
                                     </td>
-                                    <td class="px-4 py-3 text-xs text-gray-500">
+                                    <td class="px-4 py-3 text-xs text-slate-500">
                                         {{ formatearFecha(bug.sla_vence_en) }}
                                     </td>
                                     <td class="px-4 py-3">
@@ -173,13 +173,13 @@ const colorTasa = computed(() => {
                                         >
                                             {{ tiempoRestante(bug.sla_vence_en) }}
                                         </span>
-                                        <span v-else class="text-xs text-gray-400">Sin SLA</span>
+                                        <span v-else class="text-xs text-slate-500">Sin SLA</span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <div v-else class="px-6 py-10 text-center text-sm text-gray-500">
+                        <div v-else class="px-6 py-10 text-center text-sm text-slate-500">
                             No tienes bugs asignados actualmente.
                         </div>
                     </div>
@@ -187,37 +187,37 @@ const colorTasa = computed(() => {
 
                 <!-- ── Bugs sin asignar en tus proyectos ───────────────── -->
                 <section>
-                    <h3 class="mb-3 text-base font-semibold text-gray-700">
+                    <h3 class="mb-3 text-base font-semibold text-slate-300">
                         Bugs sin asignar en tus proyectos
                         <span
                             class="ml-2 rounded-full px-2 py-0.5 text-xs font-medium"
                             :class="bugsSinAsignar.length > 0
                                 ? 'bg-red-100 text-red-700'
-                                : 'bg-gray-100 text-gray-600'"
+                                : 'bg-slate-800 text-slate-400'"
                         >
                             {{ bugsSinAsignar.length }}
                         </span>
                     </h3>
 
-                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                        <table v-if="bugsSinAsignar.length > 0" class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                    <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-sm">
+                        <table v-if="bugsSinAsignar.length > 0" class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Ticket</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Título</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Prioridad</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Estado</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Proyecto</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Creado</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Ticket</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Título</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Prioridad</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Estado</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Proyecto</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Creado</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-slate-800/60">
                                 <tr
                                     v-for="bug in bugsSinAsignar"
                                     :key="bug.id"
-                                    class="hover:bg-gray-50"
+                                    class="hover:bg-slate-800/50"
                                 >
-                                    <td class="px-4 py-3 font-mono text-xs text-gray-700">
+                                    <td class="px-4 py-3 font-mono text-xs text-slate-300">
                                         <Link
                                             :href="route('bugs.show', bug.id)"
                                             class="text-blue-600 hover:underline"
@@ -225,7 +225,7 @@ const colorTasa = computed(() => {
                                             {{ bug.ticket_num }}
                                         </Link>
                                     </td>
-                                    <td class="max-w-xs px-4 py-3 text-gray-900">
+                                    <td class="max-w-xs px-4 py-3 text-slate-100">
                                         <Link
                                             :href="route('bugs.show', bug.id)"
                                             class="hover:underline line-clamp-1"
@@ -239,17 +239,17 @@ const colorTasa = computed(() => {
                                     <td class="px-4 py-3">
                                         <StatusBadge :estado="bug.estado" />
                                     </td>
-                                    <td class="px-4 py-3 text-xs text-gray-600">
+                                    <td class="px-4 py-3 text-xs text-slate-400">
                                         {{ bug.proyecto?.nombre ?? '—' }}
                                     </td>
-                                    <td class="px-4 py-3 text-xs text-gray-500">
+                                    <td class="px-4 py-3 text-xs text-slate-500">
                                         {{ formatearFecha(bug.created_at) }}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <div v-else class="px-6 py-10 text-center text-sm text-gray-500">
+                        <div v-else class="px-6 py-10 text-center text-sm text-slate-500">
                             No hay bugs sin asignar en tus proyectos.
                         </div>
                     </div>

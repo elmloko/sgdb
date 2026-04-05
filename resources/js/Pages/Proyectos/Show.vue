@@ -80,12 +80,12 @@ const estadoConfig = {
     activo:     { label: 'Activo',     class: 'bg-green-100 text-green-700' },
     pausado:    { label: 'Pausado',    class: 'bg-yellow-100 text-yellow-700' },
     completado: { label: 'Completado', class: 'bg-blue-100 text-blue-700' },
-    archivado:  { label: 'Archivado',  class: 'bg-gray-100 text-gray-500' },
+    archivado:  { label: 'Archivado',  class: 'bg-slate-800 text-slate-500' },
 }
 const rolConfig = {
     desarrollador: { label: 'Desarrollador', class: 'bg-blue-100 text-blue-700' },
     qa:            { label: 'QA',            class: 'bg-purple-100 text-purple-700' },
-    reportante:    { label: 'Reportante',    class: 'bg-gray-100 text-gray-600' },
+    reportante:    { label: 'Reportante',    class: 'bg-slate-800 text-slate-400' },
 }
 const tipoResConfig = {
     correccion:      'Corrección',
@@ -119,11 +119,11 @@ function slaClass(iso) {
         <template #header>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <Link :href="route('proyectos.index')" class="text-sm text-gray-400 hover:text-gray-600">
+                    <Link :href="route('proyectos.index')" class="text-sm text-slate-500 hover:text-slate-400">
                         Proyectos
                     </Link>
                     <span class="text-gray-300">/</span>
-                    <h2 class="text-xl font-semibold text-gray-800">{{ proyecto.nombre }}</h2>
+                    <h2 class="text-xl font-semibold text-slate-100">{{ proyecto.nombre }}</h2>
                     <span
                         class="rounded-full px-2.5 py-0.5 text-xs font-medium"
                         :class="estadoConfig[proyecto.estado]?.class"
@@ -134,7 +134,7 @@ function slaClass(iso) {
                 <div v-if="esAdmin" class="flex items-center gap-2">
                     <Link
                         :href="route('proyectos.edit', proyecto.id)"
-                        class="rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-200"
+                        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-slate-400 hover:bg-gray-200"
                     >
                         Editar
                     </Link>
@@ -143,7 +143,7 @@ function slaClass(iso) {
                     <div class="relative">
                         <button
                             @click="menuEstadoAbierto = !menuEstadoAbierto"
-                            class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+                            class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-400 hover:bg-slate-800/50 flex items-center gap-1"
                         >
                             Cambiar estado
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -152,14 +152,14 @@ function slaClass(iso) {
                         </button>
                         <div
                             v-if="menuEstadoAbierto"
-                            class="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg z-10"
+                            class="absolute right-0 mt-1 w-52 rounded-md border border-slate-800 bg-slate-900 shadow-lg z-10"
                         >
                             <button
                                 v-for="opcion in estadosDisponibles"
                                 :key="opcion.value"
                                 @click="cambiarEstado(opcion.value)"
-                                class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
-                                :class="opcion.value === 'archivado' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'"
+                                class="block w-full px-4 py-2 text-left text-sm hover:bg-slate-800/50"
+                                :class="opcion.value === 'archivado' ? 'text-red-600 hover:bg-red-50' : 'text-slate-300'"
                             >
                                 {{ opcion.label }}
                             </button>
@@ -180,9 +180,9 @@ function slaClass(iso) {
 
                 <!-- Stats rápidas -->
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
-                    <div class="rounded-xl border border-gray-200 bg-white px-4 py-3 text-center shadow-sm">
-                        <p class="text-2xl font-bold text-gray-800">{{ stats.total }}</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Total bugs</p>
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-center shadow-sm">
+                        <p class="text-2xl font-bold text-slate-100">{{ stats.total }}</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Total bugs</p>
                     </div>
                     <div class="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-center shadow-sm">
                         <p class="text-2xl font-bold text-blue-700">{{ stats.abiertos }}</p>
@@ -203,8 +203,8 @@ function slaClass(iso) {
                 </div>
 
                 <!-- Tabs -->
-                <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                    <div class="border-b border-gray-200">
+                <div class="rounded-xl border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
+                    <div class="border-b border-slate-800">
                         <nav class="flex">
                             <button
                                 v-for="tab in tabs"
@@ -212,25 +212,25 @@ function slaClass(iso) {
                                 @click="tabActiva = tab.id"
                                 class="px-5 py-3 text-sm font-medium border-b-2 transition-colors"
                                 :class="tabActiva === tab.id
-                                    ? 'border-indigo-500 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    ? 'border-indigo-500 text-cyan-400'
+                                    : 'border-transparent text-slate-500 hover:text-slate-300 hover:border-slate-700'"
                             >
                                 {{ tab.label }}
                                 <span
                                     v-if="tab.id === 'bugs'"
-                                    class="ml-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600"
+                                    class="ml-1.5 rounded-full bg-slate-800 px-1.5 py-0.5 text-xs text-slate-400"
                                 >
                                     {{ bugs.length }}
                                 </span>
                                 <span
                                     v-if="tab.id === 'resoluciones'"
-                                    class="ml-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600"
+                                    class="ml-1.5 rounded-full bg-slate-800 px-1.5 py-0.5 text-xs text-slate-400"
                                 >
                                     {{ resoluciones.length }}
                                 </span>
                                 <span
                                     v-if="tab.id === 'equipo'"
-                                    class="ml-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600"
+                                    class="ml-1.5 rounded-full bg-slate-800 px-1.5 py-0.5 text-xs text-slate-400"
                                 >
                                     {{ proyecto.usuarios.length }}
                                 </span>
@@ -243,7 +243,7 @@ function slaClass(iso) {
                         <div class="mb-3 flex items-center justify-between gap-3">
                             <select
                                 v-model="filtroEstado"
-                                class="rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                class="rounded-md border-slate-700 text-sm shadow-sm focus:border-cyan-500 focus:ring-cyan-500"
                             >
                                 <option value="">Todos los estados</option>
                                 <option value="nuevo">Nuevo</option>
@@ -258,48 +258,48 @@ function slaClass(iso) {
                             </select>
                             <Link
                                 :href="route('bugs.create')"
-                                class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+                                class="rounded-md bg-cyan-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-cyan-400"
                             >
                                 + Nuevo bug
                             </Link>
                         </div>
 
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                        <table class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Ticket</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Título</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Prioridad</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Estado</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Asignado a</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">SLA</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Creado</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Ticket</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Título</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Prioridad</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Estado</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Asignado a</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">SLA</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Creado</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr v-for="bug in bugsFiltrados" :key="bug.id" class="hover:bg-gray-50">
+                            <tbody class="divide-y divide-slate-800/60">
+                                <tr v-for="bug in bugsFiltrados" :key="bug.id" class="hover:bg-slate-800/50">
                                     <td class="px-3 py-2 font-mono text-xs">
-                                        <Link :href="route('bugs.show', bug.id)" class="text-indigo-600 hover:underline">
+                                        <Link :href="route('bugs.show', bug.id)" class="text-cyan-400 hover:underline">
                                             {{ bug.ticket_num }}
                                         </Link>
                                     </td>
                                     <td class="px-3 py-2 max-w-xs">
-                                        <Link :href="route('bugs.show', bug.id)" class="hover:underline line-clamp-1 text-gray-800">
+                                        <Link :href="route('bugs.show', bug.id)" class="hover:underline line-clamp-1 text-slate-100">
                                             {{ bug.titulo }}
                                         </Link>
                                     </td>
                                     <td class="px-3 py-2"><PriorityBadge :prioridad="bug.prioridad" /></td>
                                     <td class="px-3 py-2"><StatusBadge :estado="bug.estado" /></td>
-                                    <td class="px-3 py-2 text-gray-500 text-xs">
+                                    <td class="px-3 py-2 text-slate-500 text-xs">
                                         {{ bug.asignado_a ? bug.asignado_a.name : '—' }}
                                     </td>
                                     <td class="px-3 py-2 text-xs" :class="slaClass(bug.sla_vence_en)">
                                         {{ bug.sla_vence_en ? fechaHora(bug.sla_vence_en) : '—' }}
                                     </td>
-                                    <td class="px-3 py-2 text-xs text-gray-400">{{ fecha(bug.created_at) }}</td>
+                                    <td class="px-3 py-2 text-xs text-slate-500">{{ fecha(bug.created_at) }}</td>
                                 </tr>
                                 <tr v-if="bugsFiltrados.length === 0">
-                                    <td colspan="7" class="px-3 py-8 text-center text-gray-400">
+                                    <td colspan="7" class="px-3 py-8 text-center text-slate-500">
                                         No hay bugs con ese filtro.
                                     </td>
                                 </tr>
@@ -309,39 +309,39 @@ function slaClass(iso) {
 
                     <!-- ── Tab: Resoluciones ──────────────────────────────── -->
                     <div v-if="tabActiva === 'resoluciones'" class="p-4">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                        <table class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Ticket</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Título</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Tipo</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Resuelto por</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Commit</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Deploy</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Fecha</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Ticket</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Título</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Tipo</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Resuelto por</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Commit</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Deploy</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Fecha</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr v-for="r in resoluciones" :key="r.ticket_num" class="hover:bg-gray-50">
-                                    <td class="px-3 py-2 font-mono text-xs text-indigo-600">{{ r.ticket_num }}</td>
-                                    <td class="px-3 py-2 max-w-xs text-gray-800 line-clamp-1">{{ r.titulo }}</td>
-                                    <td class="px-3 py-2 text-xs text-gray-600">
+                            <tbody class="divide-y divide-slate-800/60">
+                                <tr v-for="r in resoluciones" :key="r.ticket_num" class="hover:bg-slate-800/50">
+                                    <td class="px-3 py-2 font-mono text-xs text-cyan-400">{{ r.ticket_num }}</td>
+                                    <td class="px-3 py-2 max-w-xs text-slate-100 line-clamp-1">{{ r.titulo }}</td>
+                                    <td class="px-3 py-2 text-xs text-slate-400">
                                         {{ tipoResConfig[r.tipo] ?? r.tipo }}
                                     </td>
-                                    <td class="px-3 py-2 text-xs text-gray-600">{{ r.resuelto_por }}</td>
-                                    <td class="px-3 py-2 font-mono text-xs text-gray-500">{{ r.commit_ref ?? '—' }}</td>
+                                    <td class="px-3 py-2 text-xs text-slate-400">{{ r.resuelto_por }}</td>
+                                    <td class="px-3 py-2 font-mono text-xs text-slate-500">{{ r.commit_ref ?? '—' }}</td>
                                     <td class="px-3 py-2 text-xs">
                                         <span
                                             class="rounded-full px-2 py-0.5"
-                                            :class="r.requiere_deploy ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-500'"
+                                            :class="r.requiere_deploy ? 'bg-orange-100 text-orange-700' : 'bg-slate-800 text-slate-500'"
                                         >
                                             {{ r.requiere_deploy ? 'Sí' : 'No' }}
                                         </span>
                                     </td>
-                                    <td class="px-3 py-2 text-xs text-gray-400">{{ fecha(r.resuelto_en) }}</td>
+                                    <td class="px-3 py-2 text-xs text-slate-500">{{ fecha(r.resuelto_en) }}</td>
                                 </tr>
                                 <tr v-if="resoluciones.length === 0">
-                                    <td colspan="7" class="px-3 py-8 text-center text-gray-400">
+                                    <td colspan="7" class="px-3 py-8 text-center text-slate-500">
                                         No hay resoluciones registradas aún.
                                     </td>
                                 </tr>
@@ -351,19 +351,19 @@ function slaClass(iso) {
 
                     <!-- ── Tab: Equipo ────────────────────────────────────── -->
                     <div v-if="tabActiva === 'equipo'" class="p-4 space-y-5">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                        <table class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Nombre</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Email</th>
-                                    <th class="px-3 py-2 text-left font-medium text-gray-500">Rol en proyecto</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Nombre</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Email</th>
+                                    <th class="px-3 py-2 text-left font-medium text-slate-500">Rol en proyecto</th>
                                     <th v-if="esAdmin" class="px-3 py-2"></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr v-for="u in proyecto.usuarios" :key="u.id" class="hover:bg-gray-50">
-                                    <td class="px-3 py-2 font-medium text-gray-800">{{ u.name }}</td>
-                                    <td class="px-3 py-2 text-gray-500">{{ u.email }}</td>
+                            <tbody class="divide-y divide-slate-800/60">
+                                <tr v-for="u in proyecto.usuarios" :key="u.id" class="hover:bg-slate-800/50">
+                                    <td class="px-3 py-2 font-medium text-slate-100">{{ u.name }}</td>
+                                    <td class="px-3 py-2 text-slate-500">{{ u.email }}</td>
                                     <td class="px-3 py-2">
                                         <span
                                             class="rounded-full px-2.5 py-0.5 text-xs font-medium"
@@ -379,7 +379,7 @@ function slaClass(iso) {
                                     </td>
                                 </tr>
                                 <tr v-if="proyecto.usuarios.length === 0">
-                                    <td :colspan="esAdmin ? 4 : 3" class="px-3 py-8 text-center text-gray-400">
+                                    <td :colspan="esAdmin ? 4 : 3" class="px-3 py-8 text-center text-slate-500">
                                         Sin miembros asignados.
                                     </td>
                                 </tr>
@@ -388,13 +388,13 @@ function slaClass(iso) {
 
                         <!-- Formulario asignar (solo admin) -->
                         <div v-if="esAdmin" class="border-t border-gray-100 pt-4">
-                            <h4 class="mb-3 text-sm font-semibold text-gray-700">Asignar usuario</h4>
+                            <h4 class="mb-3 text-sm font-semibold text-slate-300">Asignar usuario</h4>
                             <form @submit.prevent="asignarUsuario" class="flex flex-wrap items-end gap-3">
                                 <div class="flex-1 min-w-48">
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Usuario</label>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Usuario</label>
                                     <select
                                         v-model="formAsignar.user_id"
-                                        class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                        class="block w-full rounded-md border-slate-700 text-sm shadow-sm focus:border-cyan-500 focus:ring-cyan-500"
                                     >
                                         <option value="" disabled>Seleccionar...</option>
                                         <option v-for="u in usuariosParaAsignar" :key="u.id" :value="u.id">
@@ -403,10 +403,10 @@ function slaClass(iso) {
                                     </select>
                                 </div>
                                 <div class="min-w-36">
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Rol</label>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Rol</label>
                                     <select
                                         v-model="formAsignar.rol_proyecto"
-                                        class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                        class="block w-full rounded-md border-slate-700 text-sm shadow-sm focus:border-cyan-500 focus:ring-cyan-500"
                                     >
                                         <option value="desarrollador">Desarrollador</option>
                                         <option value="qa">QA</option>
@@ -416,12 +416,12 @@ function slaClass(iso) {
                                 <button
                                     type="submit"
                                     :disabled="formAsignar.processing || !formAsignar.user_id"
-                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                                    class="rounded-md bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 disabled:opacity-50"
                                 >
                                     Asignar
                                 </button>
                             </form>
-                            <p v-if="usuariosParaAsignar.length === 0" class="mt-2 text-xs text-gray-400">
+                            <p v-if="usuariosParaAsignar.length === 0" class="mt-2 text-xs text-slate-500">
                                 Todos los usuarios ya están en este proyecto.
                             </p>
                         </div>
@@ -431,23 +431,23 @@ function slaClass(iso) {
                     <div v-if="tabActiva === 'info'" class="p-6">
                         <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm">
                             <div>
-                                <dt class="font-medium text-gray-500">Descripción</dt>
-                                <dd class="mt-1 text-gray-800">{{ proyecto.descripcion || '—' }}</dd>
+                                <dt class="font-medium text-slate-500">Descripción</dt>
+                                <dd class="mt-1 text-slate-100">{{ proyecto.descripcion || '—' }}</dd>
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-500">Creado por</dt>
-                                <dd class="mt-1 text-gray-800">{{ proyecto.creado_por?.name ?? '—' }}</dd>
+                                <dt class="font-medium text-slate-500">Creado por</dt>
+                                <dd class="mt-1 text-slate-100">{{ proyecto.creado_por?.name ?? '—' }}</dd>
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-500">Fecha de inicio</dt>
-                                <dd class="mt-1 text-gray-800">{{ fecha(proyecto.fecha_inicio) }}</dd>
+                                <dt class="font-medium text-slate-500">Fecha de inicio</dt>
+                                <dd class="mt-1 text-slate-100">{{ fecha(proyecto.fecha_inicio) }}</dd>
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-500">Fecha fin estimada</dt>
-                                <dd class="mt-1 text-gray-800">{{ fecha(proyecto.fecha_fin_estimada) }}</dd>
+                                <dt class="font-medium text-slate-500">Fecha fin estimada</dt>
+                                <dd class="mt-1 text-slate-100">{{ fecha(proyecto.fecha_fin_estimada) }}</dd>
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-500">Estado</dt>
+                                <dt class="font-medium text-slate-500">Estado</dt>
                                 <dd class="mt-1">
                                     <span
                                         class="rounded-full px-2.5 py-0.5 text-xs font-medium"

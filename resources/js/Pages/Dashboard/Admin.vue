@@ -31,11 +31,11 @@ function tiempoRestante(isoString) {
 }
 
 function slaClass(isoString) {
-    if (!isoString) return 'text-gray-400'
+    if (!isoString) return 'text-slate-500'
     const min = Math.round((new Date(isoString) - Date.now()) / 60000)
     if (min < 0)   return 'text-red-600 font-semibold'
     if (min < 120) return 'text-orange-500 font-semibold'
-    return 'text-gray-500'
+    return 'text-slate-500'
 }
 
 // Barra de progreso de bugs cerrados vs total por proyecto
@@ -50,7 +50,7 @@ function porcentajeCerrados(p) {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="text-xl font-semibold leading-tight text-slate-100">
                 Dashboard — Administrador
             </h2>
         </template>
@@ -96,25 +96,25 @@ function porcentajeCerrados(p) {
 
                     <!-- Carga por desarrollador -->
                     <section>
-                        <h3 class="mb-3 text-base font-semibold text-gray-700">Carga por desarrollador</h3>
-                        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                                <thead class="bg-gray-50">
+                        <h3 class="mb-3 text-base font-semibold text-slate-300">Carga por desarrollador</h3>
+                        <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-sm">
+                            <table class="min-w-full divide-y divide-slate-800 text-sm">
+                                <thead class="bg-slate-800/50">
                                     <tr>
-                                        <th class="px-4 py-3 text-left font-medium text-gray-500">Nombre</th>
-                                        <th class="px-4 py-3 text-left font-medium text-gray-500">Rol</th>
-                                        <th class="px-4 py-3 text-center font-medium text-gray-500">Asignados</th>
-                                        <th class="px-4 py-3 text-center font-medium text-gray-500">Resueltos semana</th>
+                                        <th class="px-4 py-3 text-left font-medium text-slate-500">Nombre</th>
+                                        <th class="px-4 py-3 text-left font-medium text-slate-500">Rol</th>
+                                        <th class="px-4 py-3 text-center font-medium text-slate-500">Asignados</th>
+                                        <th class="px-4 py-3 text-center font-medium text-slate-500">Resueltos semana</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-100">
+                                <tbody class="divide-y divide-slate-800/60">
                                     <tr
                                         v-for="dev in cargaDesarrolladores"
                                         :key="dev.id"
-                                        class="hover:bg-gray-50"
+                                        class="hover:bg-slate-800/50"
                                     >
-                                        <td class="px-4 py-3 font-medium text-gray-800">{{ dev.name }}</td>
-                                        <td class="px-4 py-3 capitalize text-gray-500 text-xs">{{ dev.rol_global }}</td>
+                                        <td class="px-4 py-3 font-medium text-slate-100">{{ dev.name }}</td>
+                                        <td class="px-4 py-3 capitalize text-slate-500 text-xs">{{ dev.rol_global }}</td>
                                         <td class="px-4 py-3 text-center">
                                             <span
                                                 class="inline-block min-w-[2rem] rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -127,10 +127,10 @@ function porcentajeCerrados(p) {
                                                 {{ dev.bugs_asignados }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-center text-gray-700">{{ dev.resueltos_semana }}</td>
+                                        <td class="px-4 py-3 text-center text-slate-300">{{ dev.resueltos_semana }}</td>
                                     </tr>
                                     <tr v-if="cargaDesarrolladores.length === 0">
-                                        <td colspan="4" class="px-4 py-8 text-center text-gray-400">
+                                        <td colspan="4" class="px-4 py-8 text-center text-slate-500">
                                             Sin desarrolladores registrados.
                                         </td>
                                     </tr>
@@ -141,29 +141,29 @@ function porcentajeCerrados(p) {
 
                     <!-- Estado de proyectos activos -->
                     <section>
-                        <h3 class="mb-3 text-base font-semibold text-gray-700">Proyectos activos</h3>
+                        <h3 class="mb-3 text-base font-semibold text-slate-300">Proyectos activos</h3>
                         <div class="space-y-3">
                             <div
                                 v-for="p in proyectosActivos"
                                 :key="p.id"
-                                class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                                class="rounded-xl border border-slate-800 bg-slate-900 p-4 shadow-sm"
                             >
                                 <div class="flex items-start justify-between">
                                     <div>
                                         <Link
                                             :href="route('proyectos.show', p.id)"
-                                            class="font-medium text-gray-800 hover:underline"
+                                            class="font-medium text-slate-100 hover:underline"
                                         >
                                             {{ p.nombre }}
                                         </Link>
-                                        <p v-if="p.fecha_fin_estimada" class="text-xs text-gray-400 mt-0.5">
+                                        <p v-if="p.fecha_fin_estimada" class="text-xs text-slate-500 mt-0.5">
                                             Fin estimado: {{ p.fecha_fin_estimada }}
                                         </p>
                                     </div>
                                     <div class="flex gap-3 text-xs text-right">
                                         <div>
-                                            <span class="block font-semibold text-gray-800">{{ p.bugs_activos }}</span>
-                                            <span class="text-gray-400">activos</span>
+                                            <span class="block font-semibold text-slate-100">{{ p.bugs_activos }}</span>
+                                            <span class="text-slate-500">activos</span>
                                         </div>
                                         <div v-if="p.bugs_criticos > 0">
                                             <span class="block font-semibold text-red-600">{{ p.bugs_criticos }}</span>
@@ -173,7 +173,7 @@ function porcentajeCerrados(p) {
                                 </div>
                                 <!-- Barra de progreso -->
                                 <div class="mt-3">
-                                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <div class="flex justify-between text-xs text-slate-500 mb-1">
                                         <span>Progreso</span>
                                         <span>{{ porcentajeCerrados(p) }}% cerrados</span>
                                     </div>
@@ -185,7 +185,7 @@ function porcentajeCerrados(p) {
                                     </div>
                                 </div>
                             </div>
-                            <div v-if="proyectosActivos.length === 0" class="rounded-xl border border-gray-200 bg-white px-6 py-8 text-center text-sm text-gray-400 shadow-sm">
+                            <div v-if="proyectosActivos.length === 0" class="rounded-xl border border-slate-800 bg-slate-900 px-6 py-8 text-center text-sm text-slate-500 shadow-sm">
                                 No hay proyectos activos.
                             </div>
                         </div>
@@ -195,29 +195,29 @@ function porcentajeCerrados(p) {
 
                 <!-- ── Bugs críticos sin atender ──────────────────────────── -->
                 <section>
-                    <h3 class="mb-3 text-base font-semibold text-gray-700">
+                    <h3 class="mb-3 text-base font-semibold text-slate-300">
                         Bugs críticos sin atender
                         <span
                             class="ml-2 rounded-full px-2 py-0.5 text-xs font-medium"
-                            :class="bugsCriticos.length > 0 ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'"
+                            :class="bugsCriticos.length > 0 ? 'bg-red-100 text-red-700' : 'bg-slate-800 text-slate-400'"
                         >
                             {{ bugsCriticos.length }}
                         </span>
                     </h3>
 
-                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                        <table v-if="bugsCriticos.length > 0" class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
+                    <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-sm">
+                        <table v-if="bugsCriticos.length > 0" class="min-w-full divide-y divide-slate-800 text-sm">
+                            <thead class="bg-slate-800/50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Ticket</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Título</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Estado</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Proyecto</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Asignado a</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">SLA</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Ticket</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Título</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Estado</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Proyecto</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">Asignado a</th>
+                                    <th class="px-4 py-3 text-left font-medium text-slate-500">SLA</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-slate-800/60">
                                 <tr
                                     v-for="bug in bugsCriticos"
                                     :key="bug.id"
@@ -231,7 +231,7 @@ function porcentajeCerrados(p) {
                                             {{ bug.ticket_num }}
                                         </Link>
                                     </td>
-                                    <td class="max-w-xs px-4 py-3 text-gray-900">
+                                    <td class="max-w-xs px-4 py-3 text-slate-100">
                                         <Link
                                             :href="route('bugs.show', bug.id)"
                                             class="hover:underline line-clamp-1"
@@ -242,10 +242,10 @@ function porcentajeCerrados(p) {
                                     <td class="px-4 py-3">
                                         <StatusBadge :estado="bug.estado" />
                                     </td>
-                                    <td class="px-4 py-3 text-xs text-gray-600">{{ bug.proyecto ?? '—' }}</td>
-                                    <td class="px-4 py-3 text-xs text-gray-600">
+                                    <td class="px-4 py-3 text-xs text-slate-400">{{ bug.proyecto ?? '—' }}</td>
+                                    <td class="px-4 py-3 text-xs text-slate-400">
                                         <span v-if="bug.asignado_a">{{ bug.asignado_a }}</span>
-                                        <span v-else class="italic text-gray-400">Sin asignar</span>
+                                        <span v-else class="italic text-slate-500">Sin asignar</span>
                                     </td>
                                     <td class="px-4 py-3 text-xs" :class="slaClass(bug.sla_vence_en)">
                                         {{ bug.sla_vence_en ? tiempoRestante(bug.sla_vence_en) : '—' }}
@@ -254,7 +254,7 @@ function porcentajeCerrados(p) {
                             </tbody>
                         </table>
 
-                        <div v-else class="px-6 py-10 text-center text-sm text-gray-500">
+                        <div v-else class="px-6 py-10 text-center text-sm text-slate-500">
                             No hay bugs críticos sin atender.
                         </div>
                     </div>

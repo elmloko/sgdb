@@ -17,7 +17,7 @@ const clasesPrioridad = {
     critica: 'bg-red-100 text-red-800 border border-red-200',
     alta:    'bg-orange-100 text-orange-800 border border-orange-200',
     media:   'bg-yellow-100 text-yellow-800 border border-yellow-200',
-    baja:    'bg-gray-100 text-gray-700 border border-gray-200',
+    baja:    'bg-slate-800 text-slate-300 border border-slate-800',
 };
 
 const etiquetasPrioridad = {
@@ -30,11 +30,11 @@ const etiquetasPrioridad = {
 const clasesEstado = {
     nuevo:          'bg-blue-100 text-blue-800',
     en_revision:    'bg-purple-100 text-purple-800',
-    asignado:       'bg-indigo-100 text-indigo-800',
+    asignado:       'bg-cyan-500/10 text-indigo-800',
     en_desarrollo:  'bg-cyan-100 text-cyan-800',
     en_qa:          'bg-yellow-100 text-yellow-800',
     resuelto:       'bg-green-100 text-green-800',
-    cerrado:        'bg-gray-100 text-gray-600',
+    cerrado:        'bg-slate-800 text-slate-400',
     rechazado:      'bg-red-100 text-red-700',
     reabierto:      'bg-orange-100 text-orange-800',
 };
@@ -53,7 +53,7 @@ const etiquetasEstado = {
 
 const clasesBotonTransicion = {
     en_revision:   'bg-purple-600 hover:bg-purple-700 text-white',
-    asignado:      'bg-indigo-600 hover:bg-indigo-700 text-white',
+    asignado:      'bg-cyan-500 hover:bg-cyan-400 text-white',
     en_desarrollo: 'bg-cyan-600 hover:bg-cyan-700 text-white',
     en_qa:         'bg-yellow-500 hover:bg-yellow-600 text-white',
     resuelto:      'bg-green-600 hover:bg-green-700 text-white',
@@ -152,7 +152,7 @@ const slaInfo = computed(() => {
     if (!sla_vence_en) return null;
 
     const finalizado = ['cerrado', 'resuelto', 'rechazado'].includes(estado);
-    if (finalizado) return { texto: 'Finalizado', clase: 'text-gray-500' };
+    if (finalizado) return { texto: 'Finalizado', clase: 'text-slate-500' };
 
     const diff = new Date(sla_vence_en) - new Date();
     if (diff < 0) return { texto: 'Vencido', clase: 'text-red-600 font-bold' };
@@ -196,10 +196,10 @@ const formatFecha = (iso) => {
         <template #header>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3 flex-wrap">
-                    <Link :href="route('bugs.index')" class="text-gray-400 hover:text-gray-600">
+                    <Link :href="route('bugs.index')" class="text-slate-500 hover:text-slate-400">
                         ← Bugs
                     </Link>
-                    <span class="font-mono text-sm text-gray-400">{{ bug.ticket_num }}</span>
+                    <span class="font-mono text-sm text-slate-500">{{ bug.ticket_num }}</span>
                     <span
                         class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
                         :class="clasesEstado[bug.estado]"
@@ -224,11 +224,11 @@ const formatFecha = (iso) => {
                     <div class="lg:col-span-2 space-y-5">
 
                         <!-- Título y descripción -->
-                        <div class="rounded-lg bg-white p-6 shadow">
-                            <h1 class="text-xl font-bold text-gray-900 mb-3">
+                        <div class="rounded-lg bg-slate-900 p-6 shadow">
+                            <h1 class="text-xl font-bold text-slate-100 mb-3">
                                 {{ bug.titulo }}
                             </h1>
-                            <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                            <p class="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
                                 {{ bug.descripcion }}
                             </p>
                         </div>
@@ -236,17 +236,17 @@ const formatFecha = (iso) => {
                         <!-- Reproducción -->
                         <div
                             v-if="bug.pasos_reproducir || bug.comportamiento_esperado || bug.comportamiento_actual"
-                            class="rounded-lg bg-white p-6 shadow space-y-4"
+                            class="rounded-lg bg-slate-900 p-6 shadow space-y-4"
                         >
-                            <h2 class="text-base font-semibold text-gray-800 border-b border-gray-100 pb-2">
+                            <h2 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2">
                                 Reproducción
                             </h2>
 
                             <div v-if="bug.pasos_reproducir">
-                                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                                     Pasos para reproducir
                                 </h3>
-                                <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                                <p class="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
                                     {{ bug.pasos_reproducir }}
                                 </p>
                             </div>
@@ -256,7 +256,7 @@ const formatFecha = (iso) => {
                                     <h3 class="text-xs font-semibold uppercase tracking-wider text-green-600 mb-1">
                                         Comportamiento esperado
                                     </h3>
-                                    <p class="text-sm text-gray-700 whitespace-pre-wrap">
+                                    <p class="text-sm text-slate-300 whitespace-pre-wrap">
                                         {{ bug.comportamiento_esperado }}
                                     </p>
                                 </div>
@@ -264,7 +264,7 @@ const formatFecha = (iso) => {
                                     <h3 class="text-xs font-semibold uppercase tracking-wider text-red-600 mb-1">
                                         Comportamiento actual
                                     </h3>
-                                    <p class="text-sm text-gray-700 whitespace-pre-wrap">
+                                    <p class="text-sm text-slate-300 whitespace-pre-wrap">
                                         {{ bug.comportamiento_actual }}
                                     </p>
                                 </div>
@@ -305,20 +305,20 @@ const formatFecha = (iso) => {
 
                                 <!-- Causa raíz -->
                                 <div>
-                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                                         Causa raíz
                                     </h3>
-                                    <p class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                    <p class="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed">
                                         {{ bug.resolucion.causa_raiz }}
                                     </p>
                                 </div>
 
                                 <!-- Solución aplicada -->
                                 <div>
-                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                                         Solución aplicada
                                     </h3>
-                                    <p class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                    <p class="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed">
                                         {{ bug.resolucion.solucion_aplicada }}
                                     </p>
                                 </div>
@@ -329,25 +329,25 @@ const formatFecha = (iso) => {
                                     class="grid grid-cols-1 gap-4 sm:grid-cols-2"
                                 >
                                     <div v-if="bug.resolucion.archivos_modificados?.length">
-                                        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                                             Archivos modificados
                                         </h3>
                                         <ul class="space-y-1">
                                             <li
                                                 v-for="(archivo, i) in bug.resolucion.archivos_modificados"
                                                 :key="i"
-                                                class="flex items-center gap-1.5 text-xs font-mono text-gray-700"
+                                                class="flex items-center gap-1.5 text-xs font-mono text-slate-300"
                                             >
-                                                <span class="text-gray-400">📄</span>
+                                                <span class="text-slate-500">📄</span>
                                                 {{ archivo }}
                                             </li>
                                         </ul>
                                     </div>
                                     <div v-if="bug.resolucion.commit_ref">
-                                        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                                             Commit
                                         </h3>
-                                        <code class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-800">
+                                        <code class="inline-flex items-center gap-1 rounded bg-slate-800 px-2 py-0.5 text-xs text-slate-100">
                                             {{ bug.resolucion.commit_ref }}
                                         </code>
                                     </div>
@@ -358,7 +358,7 @@ const formatFecha = (iso) => {
                                     <h3 class="text-xs font-semibold uppercase tracking-wider text-yellow-700 mb-1">
                                         Notas para QA
                                     </h3>
-                                    <p class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed bg-yellow-50 border border-yellow-100 rounded px-3 py-2">
+                                    <p class="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed bg-yellow-50 border border-yellow-100 rounded px-3 py-2">
                                         {{ bug.resolucion.notas_qa }}
                                     </p>
                                 </div>
@@ -368,7 +368,7 @@ const formatFecha = (iso) => {
                                     <h3 class="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-1">
                                         Prevención futura
                                     </h3>
-                                    <p class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed bg-blue-50 border border-blue-100 rounded px-3 py-2">
+                                    <p class="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed bg-blue-50 border border-blue-100 rounded px-3 py-2">
                                         {{ bug.resolucion.prevencion_futura }}
                                     </p>
                                 </div>
@@ -377,27 +377,27 @@ const formatFecha = (iso) => {
                         </div>
 
                         <!-- Historial de actividad -->
-                        <div class="rounded-lg bg-white p-6 shadow">
-                            <h2 class="text-base font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+                        <div class="rounded-lg bg-slate-900 p-6 shadow">
+                            <h2 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2 mb-4">
                                 Historial de Actividad
                             </h2>
 
-                            <div v-if="bug.historial.length === 0" class="text-sm text-gray-400 text-center py-4">
+                            <div v-if="bug.historial.length === 0" class="text-sm text-slate-500 text-center py-4">
                                 Sin actividad registrada.
                             </div>
 
-                            <ol class="relative border-l border-gray-200 space-y-6 ml-3">
+                            <ol class="relative border-l border-slate-800 space-y-6 ml-3">
                                 <li
                                     v-for="entrada in bug.historial"
                                     :key="entrada.id"
                                     class="ml-6"
                                 >
-                                    <span class="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 ring-4 ring-white text-xs">
+                                    <span class="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-slate-800 ring-4 ring-white text-xs">
                                         {{ iconosAccion[entrada.accion] ?? '•' }}
                                     </span>
 
-                                    <div class="rounded-md bg-gray-50 px-4 py-3">
-                                        <p class="text-sm text-gray-800">
+                                    <div class="rounded-md bg-slate-800/50 px-4 py-3">
+                                        <p class="text-sm text-slate-100">
                                             <span class="font-medium">{{ entrada.usuario?.name ?? 'Sistema' }}</span>
                                             {{ ' ' }}{{ textoAccion(entrada) }}
                                         </p>
@@ -405,19 +405,19 @@ const formatFecha = (iso) => {
                                         <!-- Mostrar comentario solo cuando no es la descripción de una resolución -->
                                         <p
                                             v-if="entrada.comentario && entrada.accion === 'comentario'"
-                                            class="mt-2 text-sm text-gray-600 whitespace-pre-wrap bg-white rounded border border-gray-100 px-3 py-2"
+                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-gray-100 px-3 py-2"
                                         >
                                             {{ entrada.comentario }}
                                         </p>
                                         <!-- Comentario de cambio de estado (si el usuario agregó uno) -->
                                         <p
                                             v-if="entrada.comentario && entrada.accion === 'cambio_estado'"
-                                            class="mt-2 text-sm text-gray-600 whitespace-pre-wrap bg-white rounded border border-gray-100 px-3 py-2"
+                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-gray-100 px-3 py-2"
                                         >
                                             {{ entrada.comentario }}
                                         </p>
 
-                                        <time class="mt-1 block text-xs text-gray-400">
+                                        <time class="mt-1 block text-xs text-slate-500">
                                             {{ formatFechaHora(entrada.created_at) }}
                                         </time>
                                     </div>
@@ -433,9 +433,9 @@ const formatFecha = (iso) => {
                         <!-- ══ Panel de Acciones ════════════════════════════ -->
                         <div
                             v-if="transicionesDisponibles.length > 0"
-                            class="rounded-lg bg-white p-5 shadow"
+                            class="rounded-lg bg-slate-900 p-5 shadow"
                         >
-                            <h2 class="text-sm font-semibold text-gray-700 mb-3 border-b border-gray-100 pb-2">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
                                 Acciones
                             </h2>
 
@@ -446,7 +446,7 @@ const formatFecha = (iso) => {
                                     :key="estado"
                                     @click="seleccionarTransicion(estado)"
                                     class="w-full rounded-md px-3 py-2 text-sm font-medium transition-colors text-left"
-                                    :class="clasesBotonTransicion[estado] ?? 'bg-gray-500 hover:bg-gray-600 text-white'"
+                                    :class="clasesBotonTransicion[estado] ?? 'bg-slate-800/500 hover:bg-gray-600 text-white'"
                                 >
                                     <span v-if="estado === 'resuelto'" class="flex items-center gap-2">
                                         ✅ Registrar Resolución
@@ -459,8 +459,8 @@ const formatFecha = (iso) => {
 
                             <!-- Formulario de confirmación inline (para transiciones no-resuelto) -->
                             <div v-else class="space-y-3">
-                                <div class="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-2 text-sm">
-                                    <span class="text-gray-500">Pasar a:</span>
+                                <div class="flex items-center gap-2 rounded-md bg-slate-800/50 px-3 py-2 text-sm">
+                                    <span class="text-slate-500">Pasar a:</span>
                                     <span
                                         class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
                                         :class="clasesEstado[transicionPendiente]"
@@ -477,15 +477,15 @@ const formatFecha = (iso) => {
                                 </p>
 
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">
                                         Comentario
-                                        <span class="font-normal text-gray-400">(opcional)</span>
+                                        <span class="font-normal text-slate-500">(opcional)</span>
                                     </label>
                                     <textarea
                                         v-model="formEstado.comentario"
                                         rows="3"
                                         placeholder="Describe el motivo del cambio..."
-                                        class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                     />
                                 </div>
 
@@ -498,14 +498,14 @@ const formatFecha = (iso) => {
                                         @click="confirmarTransicion"
                                         :disabled="formEstado.processing"
                                         class="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50"
-                                        :class="clasesBotonTransicion[transicionPendiente] ?? 'bg-gray-500 hover:bg-gray-600 text-white'"
+                                        :class="clasesBotonTransicion[transicionPendiente] ?? 'bg-slate-800/500 hover:bg-gray-600 text-white'"
                                     >
                                         Confirmar
                                     </button>
                                     <button
                                         @click="cancelarTransicion"
                                         :disabled="formEstado.processing"
-                                        class="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                                        class="rounded-md border border-slate-700 px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-800/50 disabled:opacity-50"
                                     >
                                         Cancelar
                                     </button>
@@ -516,69 +516,69 @@ const formatFecha = (iso) => {
                         <!-- Sin acciones -->
                         <div
                             v-else-if="!['cerrado', 'rechazado'].includes(bug.estado)"
-                            class="rounded-lg bg-gray-50 border border-gray-200 p-4 text-xs text-gray-500 text-center"
+                            class="rounded-lg bg-slate-800/50 border border-slate-800 p-4 text-xs text-slate-500 text-center"
                         >
                             No tienes acciones disponibles para este bug en su estado actual.
                         </div>
 
                         <!-- Detalles -->
-                        <div class="rounded-lg bg-white p-5 shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-3 border-b border-gray-100 pb-2">
+                        <div class="rounded-lg bg-slate-900 p-5 shadow">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
                                 Detalles
                             </h2>
                             <dl class="space-y-3 text-sm">
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Proyecto</dt>
-                                    <dd class="font-medium text-gray-800 text-right">
+                                    <dt class="text-slate-500">Proyecto</dt>
+                                    <dd class="font-medium text-slate-100 text-right">
                                         <Link
                                             :href="route('proyectos.show', bug.proyecto_id)"
-                                            class="text-indigo-600 hover:underline"
+                                            class="text-cyan-400 hover:underline"
                                         >
                                             {{ bug.proyecto?.nombre ?? '—' }}
                                         </Link>
                                     </dd>
                                 </div>
                                 <div v-if="bug.modulo" class="flex justify-between">
-                                    <dt class="text-gray-500">Módulo</dt>
-                                    <dd class="font-medium text-gray-800">{{ bug.modulo }}</dd>
+                                    <dt class="text-slate-500">Módulo</dt>
+                                    <dd class="font-medium text-slate-100">{{ bug.modulo }}</dd>
                                 </div>
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Entorno</dt>
-                                    <dd class="font-medium text-gray-800">{{ etiquetasEntorno[bug.entorno] }}</dd>
+                                    <dt class="text-slate-500">Entorno</dt>
+                                    <dd class="font-medium text-slate-100">{{ etiquetasEntorno[bug.entorno] }}</dd>
                                 </div>
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Reportado por</dt>
-                                    <dd class="font-medium text-gray-800">{{ bug.reportado_por?.name ?? '—' }}</dd>
+                                    <dt class="text-slate-500">Reportado por</dt>
+                                    <dd class="font-medium text-slate-100">{{ bug.reportado_por?.name ?? '—' }}</dd>
                                 </div>
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Asignado a</dt>
-                                    <dd class="font-medium text-gray-800">
+                                    <dt class="text-slate-500">Asignado a</dt>
+                                    <dd class="font-medium text-slate-100">
                                         {{ bug.asignado_a?.name ?? 'Sin asignar' }}
                                     </dd>
                                 </div>
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Creado</dt>
-                                    <dd class="text-gray-700">{{ formatFecha(bug.created_at) }}</dd>
+                                    <dt class="text-slate-500">Creado</dt>
+                                    <dd class="text-slate-300">{{ formatFecha(bug.created_at) }}</dd>
                                 </div>
                                 <div v-if="bug.cerrado_en" class="flex justify-between">
-                                    <dt class="text-gray-500">Cerrado</dt>
-                                    <dd class="text-gray-700">{{ formatFecha(bug.cerrado_en) }}</dd>
+                                    <dt class="text-slate-500">Cerrado</dt>
+                                    <dd class="text-slate-300">{{ formatFecha(bug.cerrado_en) }}</dd>
                                 </div>
                             </dl>
                         </div>
 
                         <!-- SLA -->
-                        <div v-if="bug.sla_vence_en" class="rounded-lg bg-white p-5 shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-3 border-b border-gray-100 pb-2">
+                        <div v-if="bug.sla_vence_en" class="rounded-lg bg-slate-900 p-5 shadow">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
                                 SLA
                             </h2>
                             <dl class="space-y-2 text-sm">
                                 <div class="flex justify-between">
-                                    <dt class="text-gray-500">Vence el</dt>
-                                    <dd class="text-gray-700">{{ formatFechaHora(bug.sla_vence_en) }}</dd>
+                                    <dt class="text-slate-500">Vence el</dt>
+                                    <dd class="text-slate-300">{{ formatFechaHora(bug.sla_vence_en) }}</dd>
                                 </div>
                                 <div v-if="slaInfo" class="flex justify-between">
-                                    <dt class="text-gray-500">Estado SLA</dt>
+                                    <dt class="text-slate-500">Estado SLA</dt>
                                     <dd :class="slaInfo.clase">{{ slaInfo.texto }}</dd>
                                 </div>
                             </dl>
