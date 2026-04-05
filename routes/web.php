@@ -55,14 +55,18 @@ Route::middleware('auth')->group(function () {
 
     // Proyectos
     Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+    // Rutas estáticas ANTES que las dinámicas {proyecto}
+    Route::middleware('check.rol:admin')->group(function () {
+        Route::get('/proyectos/crear', [ProyectoController::class, 'create'])->name('proyectos.create');
+        Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+    });
     Route::get('/proyectos/{proyecto}', [ProyectoController::class, 'show'])->name('proyectos.show');
     Route::get('/proyectos/{proyecto}/editar', [ProyectoController::class, 'edit'])->name('proyectos.edit');
     Route::put('/proyectos/{proyecto}', [ProyectoController::class, 'update'])->name('proyectos.update');
 
-    // Crear proyecto (solo admin)
+    // Otras rutas de proyecto solo admin
     Route::middleware('check.rol:admin')->group(function () {
-        Route::get('/proyectos/crear', [ProyectoController::class, 'create'])->name('proyectos.create');
-        Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+
         Route::post('/proyectos/{proyecto}/usuarios', [ProyectoController::class, 'asignarUsuario'])
             ->name('proyectos.asignarUsuario');
         Route::delete('/proyectos/{proyecto}/usuarios/{usuario}', [ProyectoController::class, 'quitarUsuario'])
