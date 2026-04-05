@@ -103,21 +103,21 @@ const tiposResolucion = [
                 class="fixed inset-0 z-50 flex items-center justify-center p-4"
                 @click.self="cancelar"
             >
-                <div class="w-full max-w-2xl rounded-xl bg-white shadow-2xl flex flex-col max-h-[90vh]">
+                <div class="w-full max-w-2xl rounded-xl bg-slate-900 shadow-2xl flex flex-col max-h-[90vh]">
 
                     <!-- Cabecera -->
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 flex-shrink-0">
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900">
+                            <h2 class="text-lg font-semibold text-slate-100">
                                 Registrar Resolución
                             </h2>
-                            <p class="text-xs text-gray-500 mt-0.5 font-mono">
+                            <p class="text-xs text-slate-500 mt-0.5 font-mono">
                                 {{ bug.ticket_num }} — {{ bug.titulo }}
                             </p>
                         </div>
                         <button
                             @click="cancelar"
-                            class="rounded-md p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                            class="rounded-md p-1 text-slate-500 hover:text-slate-400 hover:bg-slate-800"
                         >
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
@@ -138,12 +138,12 @@ const tiposResolucion = [
 
                         <!-- Tipo de resolución -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Tipo de resolución <span class="text-red-500">*</span>
                             </label>
                             <select
                                 v-model="form.tipo"
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                 :class="{ 'border-red-500': form.errors.tipo }"
                             >
                                 <option
@@ -159,14 +159,14 @@ const tiposResolucion = [
 
                         <!-- Causa raíz -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Causa raíz <span class="text-red-500">*</span>
                             </label>
                             <textarea
                                 v-model="form.causa_raiz"
                                 rows="3"
                                 placeholder="¿Por qué ocurrió el bug? Descripción técnica del origen..."
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                 :class="{ 'border-red-500': form.errors.causa_raiz }"
                             />
                             <p v-if="form.errors.causa_raiz" class="mt-1 text-xs text-red-600">{{ form.errors.causa_raiz }}</p>
@@ -174,14 +174,14 @@ const tiposResolucion = [
 
                         <!-- Solución aplicada -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Solución aplicada <span class="text-red-500">*</span>
                             </label>
                             <textarea
                                 v-model="form.solucion_aplicada"
                                 rows="3"
                                 placeholder="¿Qué cambios se hicieron para resolverlo?..."
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                 :class="{ 'border-red-500': form.errors.solucion_aplicada }"
                             />
                             <p v-if="form.errors.solucion_aplicada" class="mt-1 text-xs text-red-600">{{ form.errors.solucion_aplicada }}</p>
@@ -189,9 +189,9 @@ const tiposResolucion = [
 
                         <!-- Archivos modificados -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Archivos modificados
-                                <span class="text-xs font-normal text-gray-400">(opcional)</span>
+                                <span class="text-xs font-normal text-slate-500">(opcional)</span>
                             </label>
                             <div class="space-y-2">
                                 <div
@@ -203,12 +203,12 @@ const tiposResolucion = [
                                         v-model="archivos[i]"
                                         type="text"
                                         placeholder="app/Services/BugService.php"
-                                        class="flex-1 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-mono shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        class="flex-1 rounded-md border border-slate-700 px-3 py-1.5 text-sm font-mono shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                     />
                                     <button
                                         type="button"
                                         @click="quitarArchivo(i)"
-                                        class="rounded p-1 text-gray-400 hover:text-red-500"
+                                        class="rounded p-1 text-slate-500 hover:text-red-500"
                                         title="Eliminar"
                                     >
                                         <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -220,7 +220,7 @@ const tiposResolucion = [
                             <button
                                 type="button"
                                 @click="agregarArchivo"
-                                class="mt-2 text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                                class="mt-2 text-xs font-medium text-cyan-400 hover:text-indigo-800"
                             >
                                 + Agregar archivo
                             </button>
@@ -229,15 +229,15 @@ const tiposResolucion = [
                         <!-- Commit ref / Requiere deploy (en fila) -->
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-slate-300 mb-1">
                                     Referencia de commit
-                                    <span class="text-xs font-normal text-gray-400">(opcional)</span>
+                                    <span class="text-xs font-normal text-slate-500">(opcional)</span>
                                 </label>
                                 <input
                                     v-model="form.commit_ref"
                                     type="text"
                                     placeholder="a3f9d21"
-                                    class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm font-mono shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                                 />
                             </div>
                             <div class="flex items-end pb-2">
@@ -245,50 +245,50 @@ const tiposResolucion = [
                                     <input
                                         v-model="form.requiere_deploy"
                                         type="checkbox"
-                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        class="h-4 w-4 rounded border-slate-700 text-cyan-400 focus:ring-cyan-500"
                                     />
-                                    <span class="text-sm font-medium text-gray-700">Requiere deploy a producción</span>
+                                    <span class="text-sm font-medium text-slate-300">Requiere deploy a producción</span>
                                 </label>
                             </div>
                         </div>
 
                         <!-- Notas para QA -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Notas para QA
-                                <span class="text-xs font-normal text-gray-400">(opcional)</span>
+                                <span class="text-xs font-normal text-slate-500">(opcional)</span>
                             </label>
                             <textarea
                                 v-model="form.notas_qa"
                                 rows="2"
                                 placeholder="Instrucciones específicas para que QA verifique la corrección..."
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                             />
                         </div>
 
                         <!-- Prevención futura -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
                                 Prevención futura
-                                <span class="text-xs font-normal text-gray-400">(opcional)</span>
+                                <span class="text-xs font-normal text-slate-500">(opcional)</span>
                             </label>
                             <textarea
                                 v-model="form.prevencion_futura"
                                 rows="2"
                                 placeholder="¿Qué se puede hacer para que este tipo de bug no vuelva a ocurrir?..."
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                class="block w-full rounded-md border border-slate-700 px-3 py-2 text-sm shadow-sm focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                             />
                         </div>
 
                     </div>
 
                     <!-- Pie de página -->
-                    <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 flex-shrink-0">
+                    <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800 flex-shrink-0">
                         <button
                             type="button"
                             @click="cancelar"
                             :disabled="form.processing"
-                            class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                            class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800/50 disabled:opacity-50"
                         >
                             Cancelar
                         </button>

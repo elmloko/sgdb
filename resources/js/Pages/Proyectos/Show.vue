@@ -122,7 +122,7 @@ function slaClass(iso) {
                     <Link :href="route('proyectos.index')" class="text-sm text-slate-500 hover:text-slate-400">
                         Proyectos
                     </Link>
-                    <span class="text-gray-300">/</span>
+                    <span class="text-slate-500">/</span>
                     <h2 class="text-xl font-semibold text-slate-100">{{ proyecto.nombre }}</h2>
                     <span
                         class="rounded-full px-2.5 py-0.5 text-xs font-medium"
@@ -134,7 +134,7 @@ function slaClass(iso) {
                 <div v-if="esAdmin" class="flex items-center gap-2">
                     <Link
                         :href="route('proyectos.edit', proyecto.id)"
-                        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-slate-400 hover:bg-gray-200"
+                        class="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-slate-400 hover:bg-slate-700"
                     >
                         Editar
                     </Link>
@@ -387,7 +387,7 @@ function slaClass(iso) {
                         </table>
 
                         <!-- Formulario asignar (solo admin) -->
-                        <div v-if="esAdmin" class="border-t border-gray-100 pt-4">
+                        <div v-if="esAdmin" class="border-t border-slate-800 pt-4">
                             <h4 class="mb-3 text-sm font-semibold text-slate-300">Asignar usuario</h4>
                             <form @submit.prevent="asignarUsuario" class="flex flex-wrap items-end gap-3">
                                 <div class="flex-1 min-w-48">

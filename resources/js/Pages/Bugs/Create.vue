@@ -52,7 +52,7 @@ const slaDescripcion = {
 
                     <!-- Sección: Información Principal -->
                     <div class="rounded-lg bg-slate-900 p-6 shadow space-y-5">
-                        <h3 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2">
+                        <h3 class="text-base font-semibold text-slate-100 border-b border-slate-800 pb-2">
                             Información Principal
                         </h3>
 
@@ -155,7 +155,7 @@ const slaDescripcion = {
 
                     <!-- Sección: Reproducción -->
                     <div class="rounded-lg bg-slate-900 p-6 shadow space-y-5">
-                        <h3 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2">
+                        <h3 class="text-base font-semibold text-slate-100 border-b border-slate-800 pb-2">
                             Reproducción del Bug
                         </h3>
 

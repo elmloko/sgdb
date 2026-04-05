@@ -100,7 +100,7 @@ function cambiarEstado(proyecto, nuevoEstado) {
                             <span class="font-medium text-slate-300">{{ p.bugs_count }}</span> bug(s) registrado(s)
                         </div>
 
-                        <div class="mt-4 flex gap-2 border-t border-gray-100 pt-3">
+                        <div class="mt-4 flex gap-2 border-t border-slate-800 pt-3">
                             <Link
                                 :href="route('proyectos.show', p.id)"
                                 class="flex-1 rounded-md bg-indigo-50 px-3 py-1.5 text-center text-xs font-medium text-cyan-400 hover:bg-cyan-500/10"
@@ -110,7 +110,7 @@ function cambiarEstado(proyecto, nuevoEstado) {
                             <Link
                                 v-if="esAdmin"
                                 :href="route('proyectos.edit', p.id)"
-                                class="rounded-md bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-400 hover:bg-gray-200"
+                                class="rounded-md bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-400 hover:bg-slate-700"
                             >
                                 Editar
                             </Link>

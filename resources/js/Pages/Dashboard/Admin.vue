@@ -177,7 +177,7 @@ function porcentajeCerrados(p) {
                                         <span>Progreso</span>
                                         <span>{{ porcentajeCerrados(p) }}% cerrados</span>
                                     </div>
-                                    <div class="h-1.5 w-full rounded-full bg-gray-200">
+                                    <div class="h-1.5 w-full rounded-full bg-slate-700">
                                         <div
                                             class="h-1.5 rounded-full bg-green-500 transition-all"
                                             :style="{ width: porcentajeCerrados(p) + '%' }"

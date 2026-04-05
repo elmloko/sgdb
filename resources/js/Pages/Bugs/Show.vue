@@ -57,7 +57,7 @@ const clasesBotonTransicion = {
     en_desarrollo: 'bg-cyan-600 hover:bg-cyan-700 text-white',
     en_qa:         'bg-yellow-500 hover:bg-yellow-600 text-white',
     resuelto:      'bg-green-600 hover:bg-green-700 text-white',
-    cerrado:       'bg-gray-600 hover:bg-gray-700 text-white',
+    cerrado:       'bg-slate-600 hover:bg-slate-500 text-white',
     rechazado:     'bg-red-600 hover:bg-red-700 text-white',
     reabierto:     'bg-orange-500 hover:bg-orange-600 text-white',
 };
@@ -238,7 +238,7 @@ const formatFecha = (iso) => {
                             v-if="bug.pasos_reproducir || bug.comportamiento_esperado || bug.comportamiento_actual"
                             class="rounded-lg bg-slate-900 p-6 shadow space-y-4"
                         >
-                            <h2 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2">
+                            <h2 class="text-base font-semibold text-slate-100 border-b border-slate-800 pb-2">
                                 Reproducción
                             </h2>
 
@@ -378,7 +378,7 @@ const formatFecha = (iso) => {
 
                         <!-- Historial de actividad -->
                         <div class="rounded-lg bg-slate-900 p-6 shadow">
-                            <h2 class="text-base font-semibold text-slate-100 border-b border-gray-100 pb-2 mb-4">
+                            <h2 class="text-base font-semibold text-slate-100 border-b border-slate-800 pb-2 mb-4">
                                 Historial de Actividad
                             </h2>
 
@@ -405,14 +405,14 @@ const formatFecha = (iso) => {
                                         <!-- Mostrar comentario solo cuando no es la descripción de una resolución -->
                                         <p
                                             v-if="entrada.comentario && entrada.accion === 'comentario'"
-                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-gray-100 px-3 py-2"
+                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-slate-800 px-3 py-2"
                                         >
                                             {{ entrada.comentario }}
                                         </p>
                                         <!-- Comentario de cambio de estado (si el usuario agregó uno) -->
                                         <p
                                             v-if="entrada.comentario && entrada.accion === 'cambio_estado'"
-                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-gray-100 px-3 py-2"
+                                            class="mt-2 text-sm text-slate-400 whitespace-pre-wrap bg-slate-900 rounded border border-slate-800 px-3 py-2"
                                         >
                                             {{ entrada.comentario }}
                                         </p>
@@ -435,7 +435,7 @@ const formatFecha = (iso) => {
                             v-if="transicionesDisponibles.length > 0"
                             class="rounded-lg bg-slate-900 p-5 shadow"
                         >
-                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-slate-800 pb-2">
                                 Acciones
                             </h2>
 
@@ -446,7 +446,7 @@ const formatFecha = (iso) => {
                                     :key="estado"
                                     @click="seleccionarTransicion(estado)"
                                     class="w-full rounded-md px-3 py-2 text-sm font-medium transition-colors text-left"
-                                    :class="clasesBotonTransicion[estado] ?? 'bg-slate-800/500 hover:bg-gray-600 text-white'"
+                                    :class="clasesBotonTransicion[estado] ?? 'bg-slate-800 hover:bg-slate-600 text-white'"
                                 >
                                     <span v-if="estado === 'resuelto'" class="flex items-center gap-2">
                                         ✅ Registrar Resolución
@@ -498,7 +498,7 @@ const formatFecha = (iso) => {
                                         @click="confirmarTransicion"
                                         :disabled="formEstado.processing"
                                         class="flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50"
-                                        :class="clasesBotonTransicion[transicionPendiente] ?? 'bg-slate-800/500 hover:bg-gray-600 text-white'"
+                                        :class="clasesBotonTransicion[transicionPendiente] ?? 'bg-slate-800 hover:bg-slate-600 text-white'"
                                     >
                                         Confirmar
                                     </button>
@@ -523,7 +523,7 @@ const formatFecha = (iso) => {
 
                         <!-- Detalles -->
                         <div class="rounded-lg bg-slate-900 p-5 shadow">
-                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-slate-800 pb-2">
                                 Detalles
                             </h2>
                             <dl class="space-y-3 text-sm">
@@ -569,7 +569,7 @@ const formatFecha = (iso) => {
 
                         <!-- SLA -->
                         <div v-if="bug.sla_vence_en" class="rounded-lg bg-slate-900 p-5 shadow">
-                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-gray-100 pb-2">
+                            <h2 class="text-sm font-semibold text-slate-300 mb-3 border-b border-slate-800 pb-2">
                                 SLA
                             </h2>
                             <dl class="space-y-2 text-sm">

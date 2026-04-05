@@ -8,17 +8,47 @@
     }
 
     /* Scrollbars personalizados */
-    ::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { @apply bg-transparent; }
+    ::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded-full; }
+    ::-webkit-scrollbar-thumb:hover { @apply bg-slate-600; }
+
+    /* Sobrescribir fondo blanco que @tailwindcss/forms aplica por defecto */
+    [type='text'],
+    [type='email'],
+    [type='url'],
+    [type='password'],
+    [type='number'],
+    [type='date'],
+    [type='datetime-local'],
+    [type='month'],
+    [type='search'],
+    [type='tel'],
+    [type='time'],
+    [type='week'],
+    [type='checkbox'],
+    [type='radio'],
+    textarea,
+    select {
+        @apply bg-slate-800 border-slate-700 text-slate-100;
     }
-    ::-webkit-scrollbar-track {
-        @apply bg-transparent;
+
+    [type='text']::placeholder,
+    [type='email']::placeholder,
+    [type='password']::placeholder,
+    [type='search']::placeholder,
+    [type='number']::placeholder,
+    textarea::placeholder {
+        @apply text-slate-500;
     }
-    ::-webkit-scrollbar-thumb {
-        @apply bg-slate-700 rounded-full;
+
+    select option {
+        @apply bg-slate-800 text-slate-100;
     }
-    ::-webkit-scrollbar-thumb:hover {
-        @apply bg-slate-600;
+
+    /* Checkbox y radio en tema oscuro */
+    [type='checkbox'],
+    [type='radio'] {
+        @apply accent-cyan-500;
     }
 }
