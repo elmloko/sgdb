@@ -33,9 +33,10 @@ class BugObserver
      */
     public function created(Bug $bug): void
     {
+        // Para reportes públicos reportado_por es null; se acepta null en historial
         BugHistorial::create([
             'bug_id'         => $bug->id,
-            'user_id'        => $bug->reportado_por,
+            'user_id'        => $bug->reportado_por ?? auth()->id(),
             'accion'         => 'cambio_estado',
             'valor_anterior' => null,
             'valor_nuevo'    => 'nuevo',

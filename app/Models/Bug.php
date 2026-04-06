@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class Bug extends Model
 {
@@ -28,6 +29,8 @@ class Bug extends Model
         'comportamiento_esperado',
         'comportamiento_actual',
         'reportado_por',
+        'nombre_reportante',
+        'email_reportante',
         'asignado_a',
         'sla_vence_en',
         'cerrado_en',
@@ -72,5 +75,10 @@ class Bug extends Model
     public function notificaciones(): HasMany
     {
         return $this->hasMany(Notificacion::class);
+    }
+
+    public function adjuntos(): HasMany
+    {
+        return $this->hasMany(BugAdjunto::class);
     }
 }

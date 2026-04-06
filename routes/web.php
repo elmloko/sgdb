@@ -5,12 +5,19 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportePublicoController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+// ── Formulario público de reporte (sin autenticación) ────────────────────────
+Route::get('/reportar', [ReportePublicoController::class, 'create'])->name('reporte-publico.create');
+Route::post('/reportar', [ReportePublicoController::class, 'store'])->name('reporte-publico.store');
+Route::get('/reportar/gracias', [ReportePublicoController::class, 'gracias'])->name('reporte-publico.gracias');
+// ─────────────────────────────────────────────────────────────────────────────
 
 Route::get('/dashboard', [DashboardController::class, 'admin'])
     ->middleware(['auth', 'verified', 'check.rol:admin'])

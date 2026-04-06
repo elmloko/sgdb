@@ -7,6 +7,7 @@ use App\Http\Requests\CambiarEstadoBugRequest;
 use App\Http\Requests\StoreBugRequest;
 use App\Http\Requests\StoreResolucionRequest;
 use App\Models\Bug;
+use App\Models\BugAdjunto;
 use App\Models\Proyecto;
 use App\Services\BugService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -106,11 +107,25 @@ class BugController extends Controller
 
     public function store(StoreBugRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->safe()->except('adjuntos');
         $data['reportado_por'] = $request->user()->id;
         $data['estado']        = 'nuevo';
 
         $bug = Bug::create($data);
+
+        if ($request->hasFile('adjuntos')) {
+            foreach ($request->file('adjuntos') as $archivo) {
+                $ruta = $archivo->store("adjuntos/{$bug->id}", 'public');
+
+                BugAdjunto::create([
+                    'bug_id'          => $bug->id,
+                    'nombre_original' => $archivo->getClientOriginalName(),
+                    'ruta'            => $ruta,
+                    'mime_type'       => $archivo->getMimeType(),
+                    'tamanio'         => $archivo->getSize(),
+                ]);
+            }
+        }
 
         return redirect()->route('bugs.show', $bug)
             ->with('success', "Bug {$bug->ticket_num} creado correctamente.");

@@ -24,6 +24,8 @@ class StoreBugRequest extends FormRequest
             'pasos_reproducir'        => ['nullable', 'string'],
             'comportamiento_esperado' => ['nullable', 'string'],
             'comportamiento_actual'   => ['nullable', 'string'],
+            'adjuntos'                => ['nullable', 'array', 'max:5'],
+            'adjuntos.*'              => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:5120'],
         ];
     }
 
@@ -39,6 +41,8 @@ class StoreBugRequest extends FormRequest
             'pasos_reproducir'        => 'pasos para reproducir',
             'comportamiento_esperado' => 'comportamiento esperado',
             'comportamiento_actual'   => 'comportamiento actual',
+            'adjuntos'                => 'archivos adjuntos',
+            'adjuntos.*'              => 'archivo adjunto',
         ];
     }
 }
